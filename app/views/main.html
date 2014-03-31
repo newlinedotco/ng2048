@@ -1,0 +1,22 @@
+<div id="content" ng-controller='GameController as ctrl'>
+  <!-- heading -->
+  <div id="heading">
+    <h1>2048</h1>
+    <div class="game_stats">
+      <div class="game_stat">
+        {{ ctrl.game.score }}
+      </div>
+      <div class="game_stat">
+        {{ ctrl.game.highScore }}
+      </div>
+    </div>
+  </div>
+
+  <!-- instructions -->
+  <div id="instructions">
+    Join the numbers and get to the <strong>2048</strong> tile!
+    <button ng-click='ctrl.newGame()'>New game</button>
+  </div>
+  
+  <div id="game" grid ng-model='ctrl.game_manager'></div>
+</div>

@@ -1,0 +1,126 @@
+@import "_functions";
+
+$width: 500px;
+$height: 500px;
+$max-tile-count: 4;
+$game-padding: 15px;
+$tile-padding: 15px;
+$tile-radius: 3px;
+$tile-font: 'Open Sans', sans-serif;
+$colors: #EEE4DA, #EDE0C8, #F59563, green, blue, purple, green;
+
+// DON'T EDIT BELOW
+$tile-width:  ($width  / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
+$tile-height: ($height / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
+
+#game {
+  position: relative;
+  padding: $tile-padding;
+  cursor: default;
+  -webkit-touch-callout: none;
+  -ms-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -ms-touch-action: none;
+  touch-action: none;
+  background: #bbada0;
+  border-radius: 6px;
+  width: $width;
+  height: $height;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 40px auto;
+
+  .grid-container {
+    position: absolute;
+    z-index: 1;
+    margin: 0 auto;
+
+    .grid-row {
+      margin-bottom: $tile-padding;
+      &:after {
+        content: "";
+        display: block;
+        clear: both;
+      }
+      &:last-child {
+        margin-right: 0;
+      }
+
+      .grid-cell {
+        width: $tile-width; //($width / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
+        height: $tile-height; //($height / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
+        margin-right: $tile-padding;
+        float: left;
+        @include border-radius($tile-radius);
+        background: rgba(238, 228, 218, 0.35);
+        &:last-child {
+          margin-right: 0
+        }
+      }
+    }
+  }
+
+  .tile-container {
+    position: absolute;
+    z-index: 2;
+
+    .tile {
+      font-family: $tile-font;
+      position: absolute;
+      @include transition(100ms);
+      @include transition-property(transform);
+      @include border-radius($tile-radius);
+      width: $tile-width;
+      height: $tile-height;
+
+      &.ng-enter {
+        color: green;
+      }
+
+      &.ng-remove {
+        color: green;
+      }
+
+      @for $x from 1 through $max-tile-count {
+        @for $y from 1 through $max-tile-count {
+          &.position-#{$x}-#{$y} { 
+            $zeroOffsetX: $x - 1;
+            $zeroOffsetY: $y - 1;
+            $newX: ($tile-width) * ($zeroOffsetX) + ($tile-padding * $zeroOffsetX);
+            $newY: ($tile-width) * ($zeroOffsetY) + ($tile-padding * $zeroOffsetY);
+            @include transform(translate($newX, $newY));
+          }
+
+          &.position-#{$x}-#{$y}-add {
+            color: red;
+          }
+
+          &.position-#{$x}-#{$y}-add-active {
+            color: blue;
+          }
+        }
+      }
+
+      @for $i from 1 through length($colors) {
+        &.tile-#{power(2, $i)} {
+          background: nth($colors, $i)
+        }
+      }
+      &:last-child {
+        margin-right: 0
+      }
+
+      .tile-inner {
+        line-height: ($height/$max-tile-count) - $tile-padding;
+
+        text-align: center;
+        font-weight: bold;
+        z-index: 10;
+        font-size: 3.5em;
+      }
+    }
+  }
+}

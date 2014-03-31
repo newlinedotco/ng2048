@@ -1,0 +1,13 @@
+<div class="grid-container" ng-keydown='keyPressed()'>
+  <div class="grid-row" ng-repeat="row in rows track by $id(row)">
+    <div class="grid-cell" ng-repeat="cell in row track by $index"></div>
+  </div>
+</div>
+
+<div class="tile-container">
+  <div  ng-repeat='tile in tiles track by $id(tile)'> 
+    <div tile 
+          ng-model='cell'
+          ng-repeat='cell in tile track by cell.id'></div>
+  </div> 
+</div>

@@ -1,0 +1,49 @@
+@function power ($x, $n) {
+  $ret: 1;
+
+  @if $n >= 0 {
+    @for $i from 1 through $n {
+      $ret: $ret * $x;
+    } 
+  } @else {
+    @for $i from $n to 0 {
+      $ret: $ret / $x;
+    }
+  }
+
+  @return $ret;
+}
+
+@mixin border-radius($radius: 3px) {
+  border-radius: #{$radius};
+  -moz-border-radius: #{$radius};
+  -webkit-border-radius: #{$radius};
+}
+
+@mixin opacity($value) {
+  filter:alpha(opacity=$value*100); /* msie */
+  -moz-opacity: $value; /* firefox 1.0 */
+  -khtml-opacity: $value; /* webkit */
+  opacity: $value; /* css 3 */
+}
+
+@mixin transition($duration, $ms: false) {
+  -webkit-transition: $duration ease-in-out;
+  -moz-transition: $duration ease-in-out;
+  -o-transition: $duration ease-in-out;
+  transition: $duration ease-in-out;
+}
+
+@mixin transform($value...) {
+  -webkit-transform: $value;
+  -moz-transform: $value;
+  -o-transform: $value;
+  transform: $value;
+}
+
+@mixin transition-property($property...) {
+  -moz-transition-property:    -moz-#{$property};
+  -o-transition-property:      -o-#{$property};
+  -webkit-transition-property: -webkit-#{$property};
+  transition-property:         $property;
+}
