@@ -51,7 +51,7 @@ angular.module('twentyfourtyeightApp')
         positions.y.forEach(function(y) {
           var tile = GridService.getCellAt({x:x,y:y});
 
-          if (tile.value) {
+          if (tile) {
             var cell = GridService.calculateNextPosition(tile, v);
 
             if (cell.next && 
@@ -59,14 +59,20 @@ angular.module('twentyfourtyeightApp')
                 !cell.next.merged) {
 
               // MERGE
-              cell.next.updateValue(cell.next.value * 2);
+              // cell.next.updateValue(cell.next.value * 2);
+              GridService.removeTile(cell.next);
+              GridService.insertTile(cell.newPosition);
+
               self.updateScore(self.currentScore + cell.next.value);
 
               // set the new score - --- 
               cell.next.setMerged(cell.original);
+            } else {
+              // res = GridService.moveTile(cell.original, cell.newPosition);
+              GridService.removeTile({x:tile.x,y:tile.y});
+              tile.updatePosition(cell.newPosition);
+              GridService.insertTile(cell.newPosition, tile.value);
             }
-
-            res = GridService.moveTile(cell.original, cell.newPosition);
             if (!hasMoved && res) hasMoved = true;
           }
         });

@@ -1,11 +1,23 @@
 angular.module('Game', [])
-.factory('TileModel', function() {
+.factory('GenerateUniqueId', function() {
+  // http://stackoverflow.com/questions/12223529/create-globally-unique-id-in-javascript
+  var generateUid = function (separator) {
+    var delim = separator || "-";
+    function S4() {
+      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    }
+    return (S4() + S4() + delim + S4() + delim + S4() + delim + S4() + delim + S4() + S4() + S4());
+  };
+  return generateUid;
+})
+.factory('TileModel', function(GenerateUniqueId) {
   var Tile = function(pos, val) {
     this.x      = pos.x;
     this.y      = pos.y;
     this.value  = val;
 
-    this.id = this.x+'-'+this.y;
+    this.id = GenerateUniqueId();
+    console.log('genreated', this.id);
   }
 
   Tile.prototype.savePosition = function() {
@@ -54,7 +66,8 @@ angular.module('Game', [])
 
       this.forEach('tiles', function(x,y,val) {
         var pos = {x:x,y:y};
-        self.tiles[x][y] = new TileModel(pos);
+        // self.tiles[x][y] = new TileModel(pos);
+        self.tiles[x][y] = null;
       });
     }
 
@@ -72,7 +85,7 @@ angular.module('Game', [])
           var cellLoc = { x: x, y: y },
               cell    = self.getCellAt(cellLoc);
 
-          if (cell.value) {
+          if (cell) {
             var next = self.calculateNextPosition(cell, vector);
             cells.push(next);
           }
@@ -87,8 +100,10 @@ angular.module('Game', [])
      */
     this.prepareTiles = function() {
       this.forEach('tiles', function(x,y,tile) {
-        tile.savePosition();
-        tile.clear();
+        if (tile) {
+          tile.savePosition();
+          tile.clear();
+        }
       });
     };
 
@@ -139,7 +154,7 @@ angular.module('Game', [])
 
     this.cellAvailable = function(cell) {
       if (this.withinGrid(cell)) {
-        return !this.tiles[cell.x][cell.y].value;
+        return !this.tiles[cell.x][cell.y];
       } else {
         return null;
       }
@@ -163,7 +178,7 @@ angular.module('Game', [])
           self = this;
 
       this.forEach('tiles', function(x,y,tile) {
-        if (!tile.value) cells.push({x:x,y:y});
+        if (!tile) cells.push({x:x,y:y});
       });
 
       return cells;
@@ -189,21 +204,23 @@ angular.module('Game', [])
           y: original.y
         };
 
-        var swapped = this.tiles[newPosition.x].splice(newPosition.y, 1, original);
-        this.tiles[oldPos.x].splice(oldPos.y, 1, swapped[0]);
-
-        original.updatePosition(newPosition);
-        swapped[0].updatePosition(oldPos);
+        // var swapped = this.tiles[newPosition.x].splice(newPosition.y, 1, original);
+        // this.tiles[oldPos.x].splice(oldPos.y, 1, swapped[0]);
+        // original.updatePosition(newPosition);
+        // swapped[0].updatePosition(oldPos);
+        this.tiles[oldPos.x][oldPos.y] = null;
+        this.tiles[newPosition.x][newPosition.y] = original;
 
         return true;
       }
     }
 
     this.cleanupCells = function() {
+      var self = this;
       this.forEach('tiles', function(x, y, tile) {
-        if (tile.merged) {
+        if (tile && tile.merged) {
           console.log('merged tile', tile);
-          tile.merged.updateValue(null);
+          self.removeTile(tile.merged);
         }
       });
     }
@@ -223,6 +240,20 @@ angular.module('Game', [])
     }
 
     /*
+     * Insert a new tile
+     */
+    this.insertTile = function(pos, value) {
+      this.tiles[pos.x][pos.y] = new TileModel(pos, value);
+    }
+
+    /*
+     * Remove a tile
+     */
+    this.removeTile = function(pos) {
+      this.tiles[pos.x][pos.y] = null;
+    }
+
+    /*
      * Same position
      */
     this.samePositions = function(a, b) {
@@ -233,8 +264,9 @@ angular.module('Game', [])
      * Randomly insert a new tile
      */
     this.randomlyInsertNewTile = function() {
-      var cell = this.randomAvailableCell();
-      this.tiles[cell.x][cell.y].updateValue(2);
+      var cell = this.randomAvailableCell(),
+          tile = new TileModel(cell, 2);
+      this.insertTile(cell, 2);
     }
 
     /*

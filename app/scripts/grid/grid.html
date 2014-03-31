@@ -8,6 +8,6 @@
   <div  ng-repeat='tile in tiles track by $id(tile)'> 
     <div tile 
           ng-model='cell'
-          ng-repeat='cell in tile track by cell.id'></div>
+          ng-repeat='cell in tile track by $index'></div>
   </div> 
 </div>
