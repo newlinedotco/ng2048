@@ -75,9 +75,14 @@ $tile-height: ($height / $max-tile-count) - ($tile-padding + ($tile-radius * 2))
       @include border-radius($tile-radius);
       width: $tile-width;
       height: $tile-height;
-
+  
+      &.ng-enter {
+        width: 0;
+        height: 0;
+      }
       &.ng-enter-active {
-        color: green;
+        width: $tile-width;
+        height: $tile-height;
       }
 
       @for $x from 1 through $max-tile-count {
@@ -88,11 +93,6 @@ $tile-height: ($height / $max-tile-count) - ($tile-padding + ($tile-radius * 2))
             $newX: ($tile-width) * ($zeroOffsetX) + ($tile-padding * $zeroOffsetX);
             $newY: ($tile-width) * ($zeroOffsetY) + ($tile-padding * $zeroOffsetY);
             @include transform(translate($newX, $newY));
-          }
-
-          &.position-#{$x}-#{$y}-add {
-          }
-          &.position-#{$x}-#{$y}-add-active {
           }
         }
       }
