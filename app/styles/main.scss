@@ -9,9 +9,87 @@ $tile-radius: 3px;
 $tile-font: 'Open Sans', sans-serif;
 $colors: #EEE4DA, #EAE0C8, #F59563, #3399ff, #ffa333, #cef030, #2b81d6;
 
+$game-container-background: #bbada0;
+$tile-color: #eee4da;
+$tile-gold-color: #edc22e;
+$tile-gold-glow-color: lighten($tile-gold-color, 15%);
+$text-color: #776E65;
+$bright-text-color: #f9f6f2;
+
 // DON'T EDIT BELOW
 $tile-width:  ($width  / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
 $tile-height: ($height / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
+
+html, body {
+  margin: 0;
+  padding: 0;
+
+  background: #faf8ef;
+  color: $text-color;
+  font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+  font-size: 18px;
+}
+
+h1.title {
+   font-size: 80px;
+   font-weight: bold;
+   margin: 0;
+   display: block;
+}
+.scores-container {
+  text-align: right;
+}
+
+.score-container, .best-container {
+  $inner-height: 25px;
+
+  position: relative;
+  display: inline-block;
+  background: $game-container-background;
+  padding: 15px 25px;
+  font-size: $inner-height;
+  height: $inner-height;
+  line-height: $inner-height + 22px;
+  font-weight: bold;
+  border-radius: 3px;
+  color: white;
+  margin-top: 8px;
+  text-align: center;
+
+  &:after {
+    position: absolute;
+    width: 100%;
+    top: 10px;
+    left: 0;
+    text-transform: uppercase;
+    font-size: 13px;
+    line-height: 13px;
+    text-align: center;
+    color: $tile-color;
+  }
+
+  .score-addition {
+    position: absolute;
+    right: 30px;
+    color: red;
+    font-size: $inner-height;
+    line-height: $inner-height;
+    font-weight: bold;
+    color: rgba($text-color, .9);
+    z-index: 100;
+    @include animation(move-up 600ms ease-in);
+    @include animation-fill-mode(both);
+  }
+}
+
+.score-container:after {
+  content: "Score";
+}
+
+.best-container:after {
+  content: "Best"
+}
+
 
 #game { 
   position: relative;

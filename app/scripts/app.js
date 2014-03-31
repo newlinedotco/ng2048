@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-.module('twentyfourtyeightApp', ['Game', 'Keyboard', 'ngAnimate'])
+.module('twentyfourtyeightApp', ['Game', 'Keyboard', 'ngAnimate', 'ngCookies'])
 .controller('GameController', function($scope, GameManager, GridService, KeyboardService) {
 
   this.game_manager = GameManager;

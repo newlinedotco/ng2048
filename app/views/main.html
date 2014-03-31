@@ -1,14 +1,10 @@
 <div id="content" ng-controller='GameController as ctrl'>
   <!-- heading -->
   <div id="heading">
-    <h1>2048</h1>
-    <div class="game_stats">
-      <div class="game_stat">
-        {{ ctrl.game.score }}
-      </div>
-      <div class="game_stat">
-        {{ ctrl.game.highScore }}
-      </div>
+    <h1 class="title">2048</h1>
+    <div class="scores-container">
+      <div class="score-container">{{ctrl.game.score}}</div>
+      <div class="best-container">{{ ctrl.game.highScore }}</div>
     </div>
   </div>
 

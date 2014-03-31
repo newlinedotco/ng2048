@@ -1,10 +1,12 @@
 'use strict';
 
 angular.module('twentyfourtyeightApp')
-.service('GameManager', function($q, $timeout, GridService, KeyboardService) {
+.service('GameManager', function($q, $timeout, GridService, KeyboardService, $cookieStore) {
 
   this.grid = GridService.grid;
   this.tiles = GridService.tiles;
+  this.currentScore = 0;
+  this.highScore = $cookieStore.get('highScore') || 0;
 
   this.newGame = function() {
     GridService.buildEmptyGameBoard();
@@ -51,6 +53,8 @@ angular.module('twentyfourtyeightApp')
               // MERGE
               cell.original.updateValue(null);
               cell.next.updateValue(cell.next.value * 2);
+
+              // set the new score - --- 
 
               cell.next.setMerged(cell.original);
             }
