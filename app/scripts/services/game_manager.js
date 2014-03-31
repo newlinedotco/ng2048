@@ -45,6 +45,8 @@ angular.module('twentyfourtyeightApp')
       // Update Grid
       GridService.prepareTiles();
 
+      var res;
+
       positions.x.forEach(function(x) {
         positions.y.forEach(function(y) {
           var tile = GridService.getCellAt({x:x,y:y});
@@ -57,7 +59,6 @@ angular.module('twentyfourtyeightApp')
                 !cell.next.merged) {
 
               // MERGE
-              cell.original.updateValue(null);
               cell.next.updateValue(cell.next.value * 2);
               self.updateScore(self.currentScore + cell.next.value);
 
@@ -65,7 +66,7 @@ angular.module('twentyfourtyeightApp')
               cell.next.setMerged(cell.original);
             }
 
-            var res = GridService.moveTile(cell.original, cell.newPosition);
+            res = GridService.moveTile(cell.original, cell.newPosition);
             if (!hasMoved && res) hasMoved = true;
           }
         });
@@ -74,12 +75,13 @@ angular.module('twentyfourtyeightApp')
       $timeout(function() {
         if (hasMoved) {
           GridService.randomlyInsertNewTile();
+          GridService.cleanupCells();
 
           if (!GridService.anyCellsAvailable()) {
             self.gameOver = true;
           }
         }
-      }, 100);
+      }, 0);
 
     }());
   };

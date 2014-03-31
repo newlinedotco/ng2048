@@ -199,6 +199,15 @@ angular.module('Game', [])
       }
     }
 
+    this.cleanupCells = function() {
+      this.forEach('tiles', function(x, y, tile) {
+        if (tile.merged) {
+          console.log('merged tile', tile);
+          tile.merged.updateValue(null);
+        }
+      });
+    }
+
     /*
      * Run a callback for every cell
      * either on the grid or tiles

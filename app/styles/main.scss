@@ -244,7 +244,7 @@ h1.title {
       }
 
       &.tile-merged .tile-inner {
-        z-index: 20;
+        z-index: 10;
         @include animation(pop 200ms ease $transition-time);
         @include animation-fill-mode(backwards);
       }
@@ -264,8 +264,6 @@ h1.title {
             @include transform(translate($newX, $newY));
           }
           &.position-#{$x}-#{$y}-add-active {
-          }
-          &.position-#{$x}-#{$y}-remove-active {
           }
         }
       }
