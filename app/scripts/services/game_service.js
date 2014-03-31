@@ -69,7 +69,7 @@ angular.module('twentyfourtyeightApp')
             gameOver = true;
           }
         }
-      }, 110);
+      }, 100);
 
     }());
   }
