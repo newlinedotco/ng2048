@@ -12,6 +12,7 @@ angular.module('twentyfourtyeightApp')
   this.tiles = GridService.tiles;
   this.currentScore = 0;
   this.highScore = this.getHighScore();
+  this.gameOver = false;
 
   this.newGame = function() {
     GridService.buildEmptyGameBoard();
@@ -39,8 +40,7 @@ angular.module('twentyfourtyeightApp')
     return $q.when(function() {
       var v = vectors[key];
       var positions = GridService.traversalDirections(v);
-      var hasMoved = false,
-          gameOver = false;
+      var hasMoved = false;
 
       // Update Grid
       GridService.prepareTiles();
@@ -77,7 +77,7 @@ angular.module('twentyfourtyeightApp')
           GridService.randomlyInsertNewTile();
 
           if (!GridService.anyCellsAvailable()) {
-            gameOver = true;
+            self.gameOver = true;
           }
         }
       }, 100);
@@ -87,7 +87,6 @@ angular.module('twentyfourtyeightApp')
 
   this.updateScore = function(newScore) { 
     this.currentScore = newScore;
-      this.highScore = newScore;
     if(this.currentScore > this.getHighScore()) {
       this.highScore = newScore;
       $cookieStore.put('highScore', newScore);

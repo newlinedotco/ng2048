@@ -1,3 +1,8 @@
+// bower:scss
+$icon-font-path: "../../bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
+@import "app/bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
+// endbower
+
 @import "_functions";
 
 $width: 400px;
@@ -18,6 +23,10 @@ $bright-text-color: #f9f6f2;
 $tile-size: ($width - $tile-padding * ($max-tile-count + 1)) / $max-tile-count;
 $transition-time: 100ms;
 
+.container {
+  max-width: 600px;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -28,18 +37,62 @@ html, body {
   font-size: 18px;
 }
 
+p {
+   margin-top: 0;
+   margin-bottom: 10px;
+   line-height: 1.65;
+   display: block;
+   -webkit-margin-before: 1em;
+   -webkit-margin-after: 1em;
+   -webkit-margin-start: 0px;
+   -webkit-margin-end: 0px;
+}
+
+a {
+  color: $text-color;
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+  &:hover {
+    color: darken($text-color, 5%);
+  }
+}
+
+strong {
+  &.important {
+    text-transform: uppercase;
+  }
+}
+
+hr {
+  border: none;
+  border-bottom: 1px solid lighten($text-color, 40%);
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+#heading {
+   margin-top: 4em;
+}
+
 h1.title {
    font-size: 80px;
    font-weight: bold;
    margin: 0;
    display: block;
+   float: left;
 }
+
 .scores-container {
   text-align: right;
+  float: right;
 }
 
 .score-container, .best-container {
   $inner-height: 25px;
+
+  min-height: 2.5em;
+  min-width: 5em;
 
   position: relative;
   display: inline-block;
@@ -86,6 +139,34 @@ h1.title {
 
 .best-container:after {
   content: "Best"
+}
+
+#instructions {
+   padding-top: 0.5em;
+
+   .restart-button {
+      margin-top: -0.5em; /* hack */
+   }
+}
+
+.restart-button {
+   display: inline-block;
+   background: #8f7a66;
+   border-radius: 3px;
+   padding: 0 20px;
+   text-decoration: none;
+   color: #f9f6f2;
+   height: 40px;
+   line-height: 42px;
+   cursor: pointer;
+   display: block;
+   text-align: center;
+   float: right;
+   border: none;
+}
+
+#content {
+   
 }
 
 
