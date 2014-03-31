@@ -11,3 +11,16 @@ $ npm install
 $ bower install
 $ grunt serve
 ```
+
+## Troubleshooting
+
+If you're having trouble doing an `npm install`, make sure you have a recent version of node.js and `npm`. 
+
+This repo was tested on node `v0.10.26` and `npm` `1.4.3`.
+
+Here's a nice way to get a recent version of node using the `n` node version manager:
+
+    sudo npm cache clean -f
+    sudo npm install -g n
+    sudo n stable
+
