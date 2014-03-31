@@ -227,33 +227,51 @@ h1.title {
     .tile {
       font-family: $tile-font;
       position: absolute;
-      @include transition($transition-time);
-      @include transition-property(transform);
-      @include border-radius($tile-radius);
       width: $tile-size;
       height: $tile-size;
+      @include border-radius($tile-radius);
+      @include transition($transition-time ease-in-out);
+      @include transition-property(transform);
+      -webkit-transition-property: -webkit-transform;
+      -moz-transition-property: -moz-transform;
+      transition-property: transform;
 
-      &.ng-enter-active {
-        @include animation($transition-time appear);
+      &.ng-enter .tile-inner {
+        opacity: 0;
+      }
+      &.ng-enter-active .tile-inner {
+        @include animation(appear $transition-time ease-in-out $transition-time);
+      }
+
+      &.tile-merged .tile-inner {
+        z-index: 20;
+        @include animation(pop 200ms ease $transition-time);
+        @include animation-fill-mode(backwards);
+      }
+
+      &.ng-remove .tile-inner {
+        @include animation(pop 200ms ease $transition-time);
       }
 
       @for $x from 1 through $max-tile-count {
         @for $y from 1 through $max-tile-count {
+          $zeroOffsetX: $x - 1;
+          $zeroOffsetY: $y - 1;
+          $newX: ($tile-size) * ($zeroOffsetX) + ($tile-padding * $zeroOffsetX);
+          $newY: ($tile-size) * ($zeroOffsetY) + ($tile-padding * $zeroOffsetY);
+
           &.position-#{$x}-#{$y} { 
-            $zeroOffsetX: $x - 1;
-            $zeroOffsetY: $y - 1;
-            $newX: ($tile-size) * ($zeroOffsetX) + ($tile-padding * $zeroOffsetX);
-            $newY: ($tile-size) * ($zeroOffsetY) + ($tile-padding * $zeroOffsetY);
             @include transform(translate($newX, $newY));
           }
-          &.position-#{$x}-#{$y}-remove {
-            @include animation($transition-time pop);
+          &.position-#{$x}-#{$y}-add-active {
+          }
+          &.position-#{$x}-#{$y}-remove-active {
           }
         }
       }
 
       @for $i from 1 through length($colors) {
-        &.tile-#{power(2, $i)} {
+        &.tile-#{power(2, $i)} .tile-inner {
           background: nth($colors, $i)
         }
       }
@@ -276,11 +294,11 @@ h1.title {
 @include keyframes(appear) {
   0% {
     opacity: 0;
-    @include transform(scale(0.5));
+    @include transform(scale(0));
   }
   100% {
     opacity: 1;
-    @include transform(scale(1));
+    @include transform(scale(2));
   } 
 }
 

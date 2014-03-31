@@ -27,13 +27,6 @@
   opacity: $value; /* css 3 */
 }
 
-@mixin transition($duration, $ms: false) {
-  -webkit-transition: $duration ease-in-out;
-  -moz-transition: $duration ease-in-out;
-  -o-transition: $duration ease-in-out;
-  transition: $duration ease-in-out;
-}
-
 @mixin transform($value...) {
   -webkit-transform: $value;
   -moz-transform: $value;
@@ -41,11 +34,16 @@
   transform: $value;
 }
 
-@mixin transition-property($property...) {
-  -moz-transition-property:    -moz-#{$property};
-  -o-transition-property:      -o-#{$property};
-  -webkit-transition-property: -webkit-#{$property};
-  transition-property:         $property;
+@mixin transition($args...) {
+  -webkit-transition: $args;
+  -moz-transition: $args;
+  transition: $args;
+}
+
+@mixin transition-property($args...) {
+  -webkit-transition-property: $args;
+  -moz-transition-property: $args;
+  transition-property: $args;
 }
 
 @mixin keyframes($name) {
@@ -63,7 +61,7 @@
   } 
 }
 
-@mixin animation($name) {
+@mixin animation($name...) {
   -webkit-animation: $name;
   -moz-animation: $name;
   -ms-animation: $name;

@@ -62,7 +62,6 @@ angular.module('twentyfourtyeightApp')
               self.updateScore(self.currentScore + cell.next.value);
 
               // set the new score - --- 
-
               cell.next.setMerged(cell.original);
             }
 
