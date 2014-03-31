@@ -15,6 +15,7 @@ angular.module('twentyfourtyeightApp')
   this.gameOver = false;
 
   this.newGame = function() {
+    this.gameOver = false;
     GridService.buildEmptyGameBoard();
     GridService.buildStartingPosition();
   };
