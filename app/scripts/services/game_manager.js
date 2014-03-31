@@ -3,15 +3,20 @@
 angular.module('twentyfourtyeightApp')
 .service('GameManager', function($q, $timeout, GridService, KeyboardService, $cookieStore) {
 
+  this.getHighScore = function() { 
+    return parseInt($cookieStore.get('highScore')) || 0;
+  };
+
+
   this.grid = GridService.grid;
   this.tiles = GridService.tiles;
   this.currentScore = 0;
-  this.highScore = $cookieStore.get('highScore') || 0;
+  this.highScore = this.getHighScore();
 
   this.newGame = function() {
     GridService.buildEmptyGameBoard();
     GridService.buildStartingPosition();
-  }
+  };
 
   /*
    * The game loop
@@ -30,6 +35,7 @@ angular.module('twentyfourtyeightApp')
    *      i. move the original tile
    */
   this.move = function(key) {
+    var self = this;
     return $q.when(function() {
       var v = vectors[key];
       var positions = GridService.traversalDirections(v);
@@ -53,6 +59,7 @@ angular.module('twentyfourtyeightApp')
               // MERGE
               cell.original.updateValue(null);
               cell.next.updateValue(cell.next.value * 2);
+              self.updateScore(self.currentScore + cell.next.value);
 
               // set the new score - --- 
 
@@ -76,7 +83,16 @@ angular.module('twentyfourtyeightApp')
       }, 100);
 
     }());
-  }
+  };
+
+  this.updateScore = function(newScore) { 
+    this.currentScore = newScore;
+      this.highScore = newScore;
+    if(this.currentScore > this.getHighScore()) {
+      this.highScore = newScore;
+      $cookieStore.put('highScore', newScore);
+    }
+  };
 
   // Private things
   var vectors = {
@@ -84,6 +100,6 @@ angular.module('twentyfourtyeightApp')
     'right': { x: 1, y: 0 },
     'up': { x: 0, y: -1 },
     'down': { x: 0, y: 1 }
-  }
+  };
 
 });
