@@ -37,7 +37,7 @@ angular.module('Game', [])
 
   this.setSize = function(sz) {
     this.size = sz ? sz : 0;
-  }
+  };
 
   var service = this;
 
@@ -56,7 +56,7 @@ angular.module('Game', [])
         var pos = {x:x,y:y};
         self.tiles[x][y] = new TileModel(pos);
       });
-    }
+    };
 
     /*
      * Calculate the next positions for
@@ -76,11 +76,11 @@ angular.module('Game', [])
             var next = self.calculateNextPosition(cell, vector);
             cells.push(next);
           }
-        })
+        });
       });
 
       return cells;
-    }
+    };
 
     /*
      * Prepare for traversal
