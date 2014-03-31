@@ -9,6 +9,7 @@ $colors: #EEE4DA, #EAE0C8, #F59563, #3399ff, #ffa333, #cef030, #2b81d6;
 
 // DON'T EDIT BELOW
 $tile-size: ($width - $tile-padding * ($max-tile-count + 1)) / $max-tile-count;
+$transition-time: 100ms;
 
 #game { 
   position: relative;
@@ -67,14 +68,14 @@ $tile-size: ($width - $tile-padding * ($max-tile-count + 1)) / $max-tile-count;
     .tile {
       font-family: $tile-font;
       position: absolute;
-      @include transition(100ms);
+      @include transition($transition-time);
       @include transition-property(transform);
       @include border-radius($tile-radius);
       width: $tile-size;
       height: $tile-size;
 
       &.ng-enter-active {
-        @include animation(2s appear);
+        @include animation($transition-time appear);
       }
 
       @for $x from 1 through $max-tile-count {
@@ -87,7 +88,7 @@ $tile-size: ($width - $tile-padding * ($max-tile-count + 1)) / $max-tile-count;
             @include transform(translate($newX, $newY));
           }
           &.position-#{$x}-#{$y}-remove {
-            @include animation(10s pop);
+            @include animation($transition-time pop);
           }
         }
       }
