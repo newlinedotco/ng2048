@@ -7,7 +7,7 @@ $game-padding: 15px;
 $tile-padding: 15px;
 $tile-radius: 3px;
 $tile-font: 'Open Sans', sans-serif;
-$colors: #EEE4DA, #EDE0C8, #F59563, green, blue, purple, green;
+$colors: #EEE4DA, #EDE0C8, #F59563, #3399ff, #ffa333, #cef030, #2b81d6;
 
 // DON'T EDIT BELOW
 $tile-width:  ($width  / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
