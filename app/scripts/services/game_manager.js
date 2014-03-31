@@ -7,17 +7,22 @@ angular.module('twentyfourtyeightApp')
     return parseInt($cookieStore.get('highScore')) || 0;
   };
 
-
   this.grid = GridService.grid;
   this.tiles = GridService.tiles;
-  this.currentScore = 0;
-  this.highScore = this.getHighScore();
-  this.gameOver = false;
+  this.winningValue = 2048;
+
+  this.reinit = function() {
+    this.gameOver = false;
+    this.win = false;
+    this.currentScore = 0;
+    this.highScore = this.getHighScore();
+  };
+  this.reinit();
 
   this.newGame = function() {
-    this.gameOver = false;
     GridService.buildEmptyGameBoard();
     GridService.buildStartingPosition();
+    this.reinit();
   };
 
   /*
@@ -39,9 +44,11 @@ angular.module('twentyfourtyeightApp')
   this.move = function(key) {
     var self = this;
     return $q.when(function() {
+      if(self.win) { return false; }
       var v = vectors[key];
       var positions = GridService.traversalDirections(v);
       var hasMoved = false;
+      var hasWon = false;
 
       // Update Grid
       GridService.prepareTiles();
@@ -61,9 +68,11 @@ angular.module('twentyfourtyeightApp')
               cell.original.updateValue(null);
               cell.next.updateValue(cell.next.value * 2);
               self.updateScore(self.currentScore + cell.next.value);
-
-              // set the new score - --- 
               cell.next.setMerged(cell.original);
+
+              if(cell.next.value >= self.winningValue) {
+                hasWon = true;
+              }
             }
 
             var res = GridService.moveTile(cell.original, cell.newPosition);
@@ -73,7 +82,11 @@ angular.module('twentyfourtyeightApp')
       });
 
       $timeout(function() {
-        if (hasMoved) {
+        if (hasWon && !self.win) {
+          self.win = true;
+        }
+
+        if (hasMoved && !self.win) {
           GridService.randomlyInsertNewTile();
           if (!self.movesAvailable()) {
             self.gameOver = true;
@@ -85,7 +98,6 @@ angular.module('twentyfourtyeightApp')
   };
 
   this.movesAvailable = function () {
-    console.log("movesAvailable");
     return GridService.anyCellsAvailable() || this.tileMatchesAvailable();
   };
 
