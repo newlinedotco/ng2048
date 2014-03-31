@@ -7,7 +7,7 @@ $game-padding: 15px;
 $tile-padding: 15px;
 $tile-radius: 3px;
 $tile-font: 'Open Sans', sans-serif;
-$colors: #EEE4DA, #EDE0C8, #F59563, #3399ff, #ffa333, #cef030, #2b81d6;
+$colors: #EEE4DA, #EAE0C8, #F59563, #3399ff, #ffa333, #cef030, #2b81d6;
 
 // DON'T EDIT BELOW
 $tile-width:  ($width  / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
@@ -75,14 +75,9 @@ $tile-height: ($height / $max-tile-count) - ($tile-padding + ($tile-radius * 2))
       @include border-radius($tile-radius);
       width: $tile-width;
       height: $tile-height;
-  
-      &.ng-enter {
-        width: 0;
-        height: 0;
-      }
+
       &.ng-enter-active {
-        width: $tile-width;
-        height: $tile-height;
+        @include animation(100ms appear);
       }
 
       @for $x from 1 through $max-tile-count {
@@ -116,4 +111,15 @@ $tile-height: ($height / $max-tile-count) - ($tile-padding + ($tile-radius * 2))
       }
     }
   }
+}
+
+@include keyframes(appear) {
+  0% {
+    opacity: 0;
+    @include transform(scale(0.5));
+  }
+  100% {
+    opacity: 1;
+    @include transform(scale(1));
+  } 
 }

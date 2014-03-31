@@ -1,4 +1,4 @@
-<div ng-if='ngModel.value' id="cell-{{ ngModel.id }}" class="tile position-{{ ngModel.x + 1 }}-{{ ngModel.y + 1 }}" ng-class="buildClasses()">
+<div ng-if='ngModel.value' id="cell-{{ ngModel.id }}" class="tile position-{{ ngModel.x + 1 }}-{{ ngModel.y + 1 }} tile-{{ ngModel.value }}">
   <div class="tile-inner">
     <!-- {{ ngModel.id }} -->
     {{ ngModel.value }}
