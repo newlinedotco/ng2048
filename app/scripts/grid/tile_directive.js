@@ -10,7 +10,6 @@ angular.module('Game')
 
       scope.buildClasses = function() {
         var classes = [];
-        classes.push("position-"+(scope.ngModel.x + 1)+'-'+(scope.ngModel.y + 1));
         classes.push('tile-' + scope.ngModel.value);
         return classes;
       }

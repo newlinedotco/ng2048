@@ -30,28 +30,32 @@ angular.module('twentyfourtyeightApp')
   this.move = function(key) {
     return $q.when(function() {
       var v = vectors[key];
-      var positions = GridService.calculateNextPositions(v);
+      var positions = GridService.traversalDirections(v);
       var hasMoved = false,
           gameOver = false;
 
       // Update Grid
       // GridService.prepareTiles();
-      for (var x = 0; x < positions.length; x++) {
-        var cell = positions[x];
+      positions.x.forEach(function(x) {
+        positions.y.forEach(function(y) {
+          var tile = GridService.getCellAt({x:x,y:y});
 
-        if (cell.original.value) {
-          if (cell.next && 
-              cell.next.value === cell.original.value) {
+          if (tile.value) {
+            var cell = GridService.calculateNextPosition(tile, v);
 
-            // MERGE
-            cell.original.updateValue(null);
-            cell.next.updateValue(cell.next.value * 2);
+            if (cell.next && 
+                cell.next.value === cell.original.value) {
+
+              // MERGE
+              cell.original.updateValue(null);
+              cell.next.updateValue(cell.next.value * 2);
+            }
+
+            var res = GridService.moveTile(cell.original, cell.newPosition);
+            if (!hasMoved && res) hasMoved = true;
           }
-
-          var res = GridService.moveTile(cell.original, cell.newPosition);
-          if (!hasMoved && res) hasMoved = true;
-        }
-      }
+        });
+      });
 
       if (hasMoved) {
         GridService.randomlyInsertNewTile();
