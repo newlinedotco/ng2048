@@ -2,9 +2,9 @@
 
 angular
 .module('twentyfourtyeightApp', ['Game', 'Keyboard', 'ngAnimate'])
-.controller('GameController', function($scope, GameService, GridService, KeyboardService) {
+.controller('GameController', function($scope, GameManager, GridService, KeyboardService) {
 
-  this.game_manager = GameService;
+  this.game_manager = GameManager;
   KeyboardService.init();
 
   this.newGame = function() {

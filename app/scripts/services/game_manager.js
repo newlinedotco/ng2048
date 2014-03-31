@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('twentyfourtyeightApp')
-.service('GameService', function($q, $timeout, GridService, KeyboardService) {
+.service('GameManager', function($q, $timeout, GridService, KeyboardService) {
 
   this.grid = GridService.grid;
   this.tiles = GridService.tiles;
