@@ -1,9 +1,7 @@
 @import "_functions";
 
-$width: 500px;
-$height: 500px;
+$width: 400px;
 $max-tile-count: 4;
-$game-padding: 15px;
 $tile-padding: 15px;
 $tile-radius: 3px;
 $tile-font: 'Open Sans', sans-serif;
@@ -17,8 +15,8 @@ $text-color: #776E65;
 $bright-text-color: #f9f6f2;
 
 // DON'T EDIT BELOW
-$tile-width:  ($width  / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
-$tile-height: ($height / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
+$tile-size: ($width - $tile-padding * ($max-tile-count + 1)) / $max-tile-count;
+$transition-time: 100ms;
 
 html, body {
   margin: 0;
@@ -105,7 +103,7 @@ h1.title {
   background: #bbada0;
   border-radius: 6px;
   width: $width;
-  height: $height;
+  height: $width;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -128,8 +126,8 @@ h1.title {
       }
 
       .grid-cell {
-        width: $tile-width; //($width / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
-        height: $tile-height; //($height / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
+        width: $tile-size; //($width / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
+        height: $tile-size; //($width / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
         margin-right: $tile-padding;
         float: left;
         @include border-radius($tile-radius);
@@ -148,14 +146,14 @@ h1.title {
     .tile {
       font-family: $tile-font;
       position: absolute;
-      @include transition(100ms);
+      @include transition($transition-time);
       @include transition-property(transform);
       @include border-radius($tile-radius);
-      width: $tile-width;
-      height: $tile-height;
+      width: $tile-size;
+      height: $tile-size;
 
       &.ng-enter-active {
-        @include animation(100ms appear);
+        @include animation($transition-time appear);
       }
 
       @for $x from 1 through $max-tile-count {
@@ -163,9 +161,12 @@ h1.title {
           &.position-#{$x}-#{$y} { 
             $zeroOffsetX: $x - 1;
             $zeroOffsetY: $y - 1;
-            $newX: ($tile-width) * ($zeroOffsetX) + ($tile-padding * $zeroOffsetX);
-            $newY: ($tile-width) * ($zeroOffsetY) + ($tile-padding * $zeroOffsetY);
+            $newX: ($tile-size) * ($zeroOffsetX) + ($tile-padding * $zeroOffsetX);
+            $newY: ($tile-size) * ($zeroOffsetY) + ($tile-padding * $zeroOffsetY);
             @include transform(translate($newX, $newY));
+          }
+          &.position-#{$x}-#{$y}-remove {
+            @include animation($transition-time pop);
           }
         }
       }
@@ -180,7 +181,7 @@ h1.title {
       }
 
       .tile-inner {
-        line-height: ($height/$max-tile-count) - $tile-padding;
+        line-height: ($width/$max-tile-count) - $tile-padding;
 
         text-align: center;
         font-weight: bold;
@@ -200,4 +201,18 @@ h1.title {
     opacity: 1;
     @include transform(scale(1));
   } 
+}
+
+@include keyframes(pop) {
+  0% {
+    opacity: 1;
+    @include transform(scale(1));
+  }
+  50% {
+    @include transform(scale(1.5));
+  }
+  100% {
+    opacity: 0;
+    @include transform(scale(1));
+  }
 }
