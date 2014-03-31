@@ -13,6 +13,14 @@ angular.module('Game', [])
     this.originalY = this.y;
   }
 
+  Tile.prototype.setMerged = function(withTile) {
+    this.merged = withTile;
+  }
+
+  Tile.prototype.clear = function() {
+    this.merged = null;
+  }
+
   Tile.prototype.updateValue = function(newVal) {
     this.value = newVal;
   }
@@ -73,6 +81,16 @@ angular.module('Game', [])
 
       return cells;
     }
+
+    /*
+     * Prepare for traversal
+     */
+    this.prepareTiles = function() {
+      this.forEach('tiles', function(x,y,tile) {
+        tile.savePosition();
+        tile.clear();
+      });
+    };
 
     /*
      * Due to the fact we calculate the next positions

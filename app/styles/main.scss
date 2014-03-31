@@ -76,11 +76,7 @@ $tile-height: ($height / $max-tile-count) - ($tile-padding + ($tile-radius * 2))
       width: $tile-width;
       height: $tile-height;
 
-      &.ng-enter {
-        color: green;
-      }
-
-      &.ng-remove {
+      &.ng-enter-active {
         color: green;
       }
 
@@ -95,11 +91,8 @@ $tile-height: ($height / $max-tile-count) - ($tile-padding + ($tile-radius * 2))
           }
 
           &.position-#{$x}-#{$y}-add {
-            color: red;
           }
-
           &.position-#{$x}-#{$y}-add-active {
-            color: blue;
           }
         }
       }
