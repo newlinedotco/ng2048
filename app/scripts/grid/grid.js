@@ -150,7 +150,6 @@ angular.module('Game', [])
      * Calculate the next position for a tile
      */
     this.calculateNextPosition = function(cell, vector) {
-      var originalCell = cell;
       var previous;
 
       do {
@@ -163,7 +162,6 @@ angular.module('Game', [])
 
       return {
         newPosition: previous,
-        original: originalCell,
         next: this.getCellAt(cell)
       }
     }
@@ -257,10 +255,12 @@ angular.module('Game', [])
     /*
      * Insert a new tile
      */
-    this.insertTile = function(pos, value) {
-      var tile = new TileModel(pos, value);
-      this.tiles[pos.x][pos.y] = tile;
-      return tile;
+    this.insertTile = function(tile) {
+      this.tiles[tile.x][tile.y] = tile;
+    }
+
+    this.newTile = function(pos, value) {
+      return new TileModel(pos, value);
     }
 
     /*
@@ -296,8 +296,9 @@ angular.module('Game', [])
      * Randomly insert a new tile
      */
     this.randomlyInsertNewTile = function() {
-      var cell = this.randomAvailableCell();
-      this.insertTile(cell, 2);
+      var cell = this.randomAvailableCell(),
+          tile = this.newTile(cell, 2);
+      this.insertTile(tile);
     }
 
     /*

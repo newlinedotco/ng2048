@@ -75,12 +75,23 @@ angular.module('twentyfourtyeightApp')
                 y: cell.next.y
               }
 
-              var newTile = GridService.insertTile(pos, newValue);
-              newTile.setMergedBy([tile, cell.next]);
+              var merged = GridService.newTile(cell.next, newValue);
+              merged.mergedFrom = [tile, cell.next];
+
+              GridService.insertTile(merged);
+              GridService.removeTile(tile);
+
+              // Converge the two tiles' positions
+              tile.updatePosition(cell.next);
+
+              // var newTile = GridService.insertTile(pos, newValue);
+              // newTile.setMergedBy([tile, cell.next]);
+              // GridService.removeTile(tile);
+              // GridService.removeTile(cell.next);
 
               self.updateScore(self.currentScore + cell.next.value);
 
-              if(newTile.value >= self.winningValue) {
+              if(merged.value >= self.winningValue) {
                 hasWon = true;
               }
             } else {
@@ -103,7 +114,7 @@ angular.module('twentyfourtyeightApp')
         if (hasMoved && !self.win) {
           GridService.randomlyInsertNewTile();
           GridService.cleanupCells();
-          
+
           if (!self.movesAvailable()) {
             self.gameOver = true;
           }
