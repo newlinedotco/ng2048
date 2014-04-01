@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('twentyfourtyeightApp')
+angular.module('Game', ['Grid', 'Keyboard'])
 .service('GameManager', function($q, $timeout, GridService, KeyboardService, $cookieStore) {
 
   this.getHighScore = function() { 

@@ -212,14 +212,7 @@ h1.title {
   position: relative;
   padding: $tile-padding;
   cursor: default;
-  -webkit-touch-callout: none;
-  -ms-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -ms-touch-action: none;
-  touch-action: none;
-  background: #bbada0;
+  background: #bbaaa0;
   border-radius: 6px;
   width: $width;
   height: $width;
@@ -275,12 +268,11 @@ h1.title {
       z-index: 2;
 
       &.ng-enter {
-        border: 10px solid red;
-        // @include animation(pop 200ms ease $transition-time);
+        @include animation(pop 200ms ease $transition-time);
         @include animation-fill-mode(backwards);
       }
       &.ng-enter-active .tile-inner {
-        // @include animation(appear $transition-time ease-in-out $transition-time);
+        @include animation(appear 200ms ease-in-out $transition-time);
       }
 
       &.tile-merged {
@@ -288,7 +280,7 @@ h1.title {
       }
 
       &.ng-remove .tile-inner {
-        // @include animation(pop 200ms ease $transition-time);
+        @include animation(pop 200ms ease $transition-time);
       }
 
       @for $x from 1 through $max-tile-count {
@@ -302,7 +294,6 @@ h1.title {
             @include transform(translate($newX, $newY));
           }
           &.ng-enter {
-            border: 2px solid red;
             @include transition($transition-time ease-in-out);
           }
         }

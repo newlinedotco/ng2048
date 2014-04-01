@@ -1,4 +1,4 @@
-angular.module('Game', [])
+angular.module('Grid', [])
 .factory('GenerateUniqueId', function() {
   // http://stackoverflow.com/questions/12223529/create-globally-unique-id-in-javascript
   var generateUid = function (separator) {

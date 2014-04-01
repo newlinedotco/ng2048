@@ -1,4 +1,4 @@
-angular.module('Game')
+angular.module('Grid')
 .directive('grid', function() {
   return {
     restrict: 'A',
