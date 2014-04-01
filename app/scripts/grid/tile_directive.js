@@ -6,6 +6,7 @@ angular.module('Game')
       ngModel: '='
     },
     templateUrl: 'scripts/grid/tile.html',
-    link: function(scope, ele, attrs) {}
+    link: function(scope, ele, attrs) {
+    }
   }
 })

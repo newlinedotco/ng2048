@@ -14,10 +14,10 @@ angular.module('Game', [])
   var Tile = function(pos, val) {
     this.x      = pos.x;
     this.y      = pos.y;
-    this.value  = val;
+    this.value  = val || 2;
 
     this.id = GenerateUniqueId();
-    console.log('genreated', this.id);
+    this.merged = null;
   }
 
   Tile.prototype.savePosition = function() {
@@ -25,11 +25,7 @@ angular.module('Game', [])
     this.originalY = this.y;
   }
 
-  Tile.prototype.setMerged = function(withTile) {
-    this.merged = withTile;
-  }
-
-  Tile.prototype.clear = function() {
+  Tile.prototype.reset = function() {
     this.merged = null;
   }
 
@@ -40,6 +36,13 @@ angular.module('Game', [])
   Tile.prototype.updatePosition = function(newPosition) {
     this.x = newPosition.x;
     this.y = newPosition.y;
+  }
+
+  Tile.prototype.getPosition = function() {
+    return {
+      x: this.x,
+      y: this.y
+    }
   }
 
   return Tile;
@@ -99,13 +102,25 @@ angular.module('Game', [])
      * Prepare for traversal
      */
     this.prepareTiles = function() {
+      var self = this;
       this.forEach('tiles', function(x,y,tile) {
         if (tile) {
           tile.savePosition();
-          tile.clear();
+          tile.reset();
         }
       });
     };
+
+    this.cleanupCells = function() {
+      var self = this;
+      this.forEach('tiles', function(x, y, tile) {
+        if (tile && tile.merged) {
+          tile.merged.forEach(function(t) {
+            self.removeTile(t);
+          });
+        }
+      });
+    }
 
     /*
      * Due to the fact we calculate the next positions
@@ -177,8 +192,11 @@ angular.module('Game', [])
       var cells = [],
           self = this;
 
-      this.forEach('tiles', function(x,y,tile) {
-        if (!tile) cells.push({x:x,y:y});
+      this.forEach('grid', function(x,y,tile) {
+        var tile = self.getCellAt(x,y);
+        if (!tile) {
+          cells.push({x:x,y:y});
+        }
       });
 
       return cells;
@@ -195,13 +213,13 @@ angular.module('Game', [])
       }
     }
 
-    this.moveTile = function(original, newPosition) {
-      if (this.samePositions(original, newPosition)) {
+    this.moveTile = function(tile, newPosition) {
+      if (this.samePositions(tile, newPosition)) {
         return false;
       } else {
         var oldPos = {
-          x: original.x,
-          y: original.y
+          x: tile.x,
+          y: tile.y
         };
 
         // var swapped = this.tiles[newPosition.x].splice(newPosition.y, 1, original);
@@ -209,20 +227,11 @@ angular.module('Game', [])
         // original.updatePosition(newPosition);
         // swapped[0].updatePosition(oldPos);
         this.tiles[oldPos.x][oldPos.y] = null;
-        this.tiles[newPosition.x][newPosition.y] = original;
+        this.tiles[newPosition.x][newPosition.y] = tile;
+        tile.updatePosition(newPosition);
 
         return true;
       }
-    }
-
-    this.cleanupCells = function() {
-      var self = this;
-      this.forEach('tiles', function(x, y, tile) {
-        if (tile && tile.merged) {
-          console.log('merged tile', tile);
-          self.removeTile(tile.merged);
-        }
-      });
     }
 
     /*
@@ -243,13 +252,30 @@ angular.module('Game', [])
      * Insert a new tile
      */
     this.insertTile = function(pos, value) {
-      this.tiles[pos.x][pos.y] = new TileModel(pos, value);
+      var tile = new TileModel(pos, value);
+      this.tiles[pos.x][pos.y] = tile;
+      return tile;
+    }
+
+    /*
+     * print grid
+     */
+    this.printTiles = function() {
+      for (var x = 0; x < this.size; x++) {
+        var msg = '';
+        for (var y = 0; y < this.size; y++) {
+          var tile = this.getCellAt(x,y);
+          msg += tile ? tile.value : 'x';
+        }
+        console.log(msg);
+      }
     }
 
     /*
      * Remove a tile
      */
     this.removeTile = function(pos) {
+      console.log('removing tile', pos);
       this.tiles[pos.x][pos.y] = null;
     }
 
@@ -264,8 +290,7 @@ angular.module('Game', [])
      * Randomly insert a new tile
      */
     this.randomlyInsertNewTile = function() {
-      var cell = this.randomAvailableCell(),
-          tile = new TileModel(cell, 2);
+      var cell = this.randomAvailableCell();
       this.insertTile(cell, 2);
     }
 

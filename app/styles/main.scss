@@ -21,7 +21,7 @@ $bright-text-color: #f9f6f2;
 
 // DON'T EDIT BELOW
 $tile-size: ($width - $tile-padding * ($max-tile-count + 1)) / $max-tile-count;
-$transition-time: 100ms;
+$transition-time: 500ms;
 
 .container {
   max-width: 600px;
@@ -236,21 +236,22 @@ h1.title {
       -moz-transition-property: -moz-transform;
       transition-property: transform;
 
-      &.ng-enter .tile-inner {
-        opacity: 0;
+      &.ng-enter {
+        border: 10px solid red;
+        // @include animation(pop 200ms ease $transition-time);
+        @include animation-fill-mode(backwards);
       }
       &.ng-enter-active .tile-inner {
-        @include animation(appear $transition-time ease-in-out $transition-time);
+        // @include animation(appear $transition-time ease-in-out $transition-time);
       }
 
       &.tile-merged .tile-inner {
-        z-index: 10;
-        @include animation(pop 200ms ease $transition-time);
-        @include animation-fill-mode(backwards);
+        z-index: 30;
+        border: 10px solid red;
       }
 
       &.ng-remove .tile-inner {
-        @include animation(pop 200ms ease $transition-time);
+        // @include animation(pop 200ms ease $transition-time);
       }
 
       @for $x from 1 through $max-tile-count {
@@ -263,7 +264,9 @@ h1.title {
           &.position-#{$x}-#{$y} { 
             @include transform(translate($newX, $newY));
           }
-          &.position-#{$x}-#{$y}-add-active {
+          &.ng-enter {
+            border: 2px solid red;
+            @include transition($transition-time ease-in-out);
           }
         }
       }

@@ -55,39 +55,66 @@ angular.module('twentyfourtyeightApp')
             var cell = GridService.calculateNextPosition(tile, v);
 
             if (cell.next && 
-                cell.next.value === cell.original.value &&
+                cell.next.value === tile.value &&
                 !cell.next.merged) {
 
               // MERGE
-              // cell.next.updateValue(cell.next.value * 2);
-              GridService.removeTile(cell.next);
-              GridService.insertTile(cell.newPosition);
+              // GridService.removeTile(cell.next);
+              // GridService.insertTile(cell.newPosition);
+              var newValue = tile.value * 2;
+              var pos = {
+                x: cell.next.x,
+                y: cell.next.y
+              }
+
+              // var merged = new Tile(positions.next, tile.value * 2);
+              // merged.mergedFrom = [tile, next];
+
+              // self.grid.insertTile(merged);
+              // self.grid.removeTile(tile);
+
+              // // Converge the two tiles' positions
+              // tile.updatePosition(positions.next);
+
+              // // Update the score
+              // self.score += merged.value;
+
+              var newTile = GridService.insertTile(pos, newValue);
+
+              // console.log('newTile', newTile);
+              // GridService.moveTile(cell.next, cell.next.getPosition());
+
+              newTile.setMergingTiles([tile, cell.next]);
+              console.log('created new tile', newTile);
+
+              // MOVE THE MERGED TILES
+              GridService.moveTile(cell.original, newTile.getPosition());
+              GridService.moveTile(cell.next, newTile.getPosition());
+              // cell.next.setMerged(tile);
 
               self.updateScore(self.currentScore + cell.next.value);
-
-              // set the new score - --- 
-              cell.next.setMerged(cell.original);
             } else {
               // res = GridService.moveTile(cell.original, cell.newPosition);
-              GridService.removeTile({x:tile.x,y:tile.y});
-              tile.updatePosition(cell.newPosition);
-              GridService.insertTile(cell.newPosition, tile.value);
+              // GridService.removeTile({x:tile.x,y:tile.y});
+              res = GridService.moveTile(tile, cell.newPosition);
+              // GridService.insertTile(cell.newPosition, tile.value);
             }
             if (!hasMoved && res) hasMoved = true;
           }
         });
       });
 
+
       $timeout(function() {
         if (hasMoved) {
           GridService.randomlyInsertNewTile();
-          GridService.cleanupCells();
+          // GridService.cleanupCells();
 
           if (!GridService.anyCellsAvailable()) {
             self.gameOver = true;
           }
         }
-      }, 0);
+      }, 100);
 
     }());
   };
