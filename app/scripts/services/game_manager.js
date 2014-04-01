@@ -57,13 +57,12 @@ angular.module('twentyfourtyeightApp')
 
       positions.x.forEach(function(x) {
         positions.y.forEach(function(y) {
-          var tile = GridService.getCellAt({x:x,y:y});
+          var originalPosition = {x:x,y:y};
+          var tile = GridService.getCellAt(originalPosition);
 
           if (tile) {
             var cell = GridService.calculateNextPosition(tile, v),
                 next = cell.next;
-
-            console.log(x, y, cell, next);
 
             if (next && 
                 next.value === tile.value &&
@@ -102,9 +101,10 @@ angular.module('twentyfourtyeightApp')
               // GridService.removeTile({x:tile.x,y:tile.y});
               res = GridService.moveTile(tile, cell.newPosition);
               // GridService.insertTile(cell.newPosition, tile.value);
+
             }
 
-            if (!GridService.samePositions(cell, tile)) {
+            if (!GridService.samePositions(originalPosition,cell.newPosition)) {
               hasMoved = true;
             }
           }

@@ -161,8 +161,6 @@ angular.module('Game', [])
         }
       } while (this.withinGrid(cell) && this.cellAvailable(cell));
 
-      console.log("calculateNextPosition", cell);
-
       return {
         newPosition: previous,
         next: this.getCellAt(cell)
@@ -213,7 +211,6 @@ angular.module('Game', [])
      * Get a cell at a position
      */
     this.getCellAt = function(pos) {
-      console.log("getCellAt", pos);
       if (this.withinGrid(pos)) {
         return this.tiles[pos.x][pos.y];
       } else {
@@ -236,7 +233,6 @@ angular.module('Game', [])
         // swapped[0].updatePosition(oldPos);
         this.tiles[oldPos.x][oldPos.y] = null;
         this.tiles[newPosition.x][newPosition.y] = tile;
-        console.log("swapping ", tile.value, "from ", oldPos.x, oldPos.y, "to", newPosition.x, newPosition.y);
          
         tile.updatePosition(newPosition);
 
@@ -303,7 +299,6 @@ angular.module('Game', [])
     this.randomlyInsertNewTile = function() {
       var cell = this.randomAvailableCell(),
           tile = this.newTile(cell, 2);
-      console.log('insertTile', cell, tile);
       this.insertTile(tile);
     }
 
