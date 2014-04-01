@@ -33,7 +33,7 @@ html, body {
 
   background: #faf8ef;
   color: $text-color;
-  font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+  font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif;
   font-size: 18px;
 }
 
@@ -169,6 +169,45 @@ h1.title {
    
 }
 
+#game-container {
+   position: relative;
+   width: $width;
+   height: $width;
+   margin: 40px auto;
+}
+
+.game-overlay {
+   width: $width;
+   height: $width;
+   background-color: rgba(255, 255, 255, 0.47);
+   position: absolute;
+   top: 0;
+   left: 0;
+   z-index: 10;
+   text-align: center;
+   padding-top: 35%;
+   font-size: 3em;
+   font-weight: bold;
+
+   .lower {
+      display: block;
+      margin-top: 29px;
+      font-size: 16px;
+
+      a {
+         display: inline-block;
+         background: #8f7a66;
+         border-radius: 3px;
+         padding: 0 20px;
+         text-decoration: none;
+         color: #f9f6f2;
+         height: 40px;
+         line-height: 42px;
+         cursor: pointer;
+         margin-left: 9px;
+      }
+   }
+}
 
 #game { 
   position: relative;
@@ -188,7 +227,6 @@ h1.title {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  margin: 40px auto;
 
   .grid-container {
     position: absolute;

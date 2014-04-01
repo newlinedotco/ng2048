@@ -7,16 +7,22 @@ angular.module('twentyfourtyeightApp')
     return parseInt($cookieStore.get('highScore')) || 0;
   };
 
-
   this.grid = GridService.grid;
   this.tiles = GridService.tiles;
-  this.currentScore = 0;
-  this.highScore = this.getHighScore();
-  this.gameOver = false;
+  this.winningValue = 2048;
+
+  this.reinit = function() {
+    this.gameOver = false;
+    this.win = false;
+    this.currentScore = 0;
+    this.highScore = this.getHighScore();
+  };
+  this.reinit();
 
   this.newGame = function() {
     GridService.buildEmptyGameBoard();
     GridService.buildStartingPosition();
+    this.reinit();
   };
 
   /*
@@ -38,9 +44,11 @@ angular.module('twentyfourtyeightApp')
   this.move = function(key) {
     var self = this;
     return $q.when(function() {
+      if(self.win) { return false; }
       var v = vectors[key];
       var positions = GridService.traversalDirections(v);
       var hasMoved = false;
+      var hasWon = false;
 
       // Update Grid
       GridService.prepareTiles();
@@ -80,11 +88,19 @@ angular.module('twentyfourtyeightApp')
               // self.score += merged.value;
 
               var newTile = GridService.insertTile(pos, newValue);
+              // cell.original.updateValue(null);
+              // cell.next.updateValue(cell.next.value * 2);
+              // self.updateScore(self.currentScore + cell.next.value);
+              // cell.next.setMerged(cell.original);
+
+              if(cell.next.value >= self.winningValue) {
+                hasWon = true;
+              }
 
               // console.log('newTile', newTile);
               // GridService.moveTile(cell.next, cell.next.getPosition());
 
-              newTile.setMergingTiles([tile, cell.next]);
+              newTile.merged = [tile, cell.next];
               console.log('created new tile', newTile);
 
               // MOVE THE MERGED TILES
@@ -106,11 +122,13 @@ angular.module('twentyfourtyeightApp')
 
 
       $timeout(function() {
-        if (hasMoved) {
-          GridService.randomlyInsertNewTile();
-          // GridService.cleanupCells();
+        if (hasWon && !self.win) {
+          self.win = true;
+        }
 
-          if (!GridService.anyCellsAvailable()) {
+        if (hasMoved && !self.win) {
+          GridService.randomlyInsertNewTile();
+          if (!self.movesAvailable()) {
             self.gameOver = true;
           }
         }
@@ -119,12 +137,18 @@ angular.module('twentyfourtyeightApp')
     }());
   };
 
-  this.updateScore = function(newScore) { 
-    this.currentScore = newScore;
-    if(this.currentScore > this.getHighScore()) {
-      this.highScore = newScore;
-      $cookieStore.put('highScore', newScore);
-    }
+  this.movesAvailable = function () {
+    return GridService.anyCellsAvailable() || this.tileMatchesAvailable();
+  };
+
+  this.getVector = function (direction) {
+    var map = {
+      0: { x: 0,  y: -1 }, // Up
+      1: { x: 1,  y: 0 },  // Right
+      2: { x: 0,  y: 1 },  // Down
+      3: { x: -1, y: 0 }   // Left
+    };
+    return map[direction];
   };
 
   // Private things
@@ -133,6 +157,38 @@ angular.module('twentyfourtyeightApp')
     'right': { x: 1, y: 0 },
     'up': { x: 0, y: -1 },
     'down': { x: 0, y: 1 }
+  };
+
+  var directions = ['left', 'right', 'up', 'down'];
+
+  this.tileMatchesAvailable = function () {
+    var self = this;
+    var tile;
+    for (var x = 0; x < self.grid.length; x++) {
+      for (var y = 0; y < self.grid.length; y++) {
+        tile = GridService.getCellAt({ x: x, y: y });
+        if (tile) {
+          for (var direction = 0; direction < directions.length; direction++) {
+            var vector = vectors[directions[direction]];
+            var cell   = { x: x + vector.x, y: y + vector.y };
+            var other  = GridService.getCellAt(cell);
+
+            if (other && other.value === tile.value) {
+              return true; // can be merged
+            }
+          }
+        }
+      }
+    }
+    return false;
+  };
+
+  this.updateScore = function(newScore) { 
+    this.currentScore = newScore;
+    if(this.currentScore > this.getHighScore()) {
+      this.highScore = newScore;
+      $cookieStore.put('highScore', newScore);
+    }
   };
 
 });

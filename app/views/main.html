@@ -14,10 +14,24 @@
     <button ng-click='ctrl.newGame()' class="restart-button">New game</button>
   </div>
   
-  <div id="game" grid ng-model='ctrl.game' class="row"></div>
+  <div id="game-container">
+    <div id="game" grid ng-model='ctrl.game' class="row"></div>
 
-  <div ng-if="ctrl.game.gameOver" class="row">
-    Game over
+    <div id="game-over" ng-if="ctrl.game.gameOver" class="row game-overlay">
+      Game over
+
+      <div class="lower">
+        <a class="retry-button" ng-click='ctrl.newGame()'>Try again</a>
+      </div>
+    </div>
+
+    <div id="win" ng-if="ctrl.game.win" class="row game-overlay">
+      You win!
+
+      <div class="lower">
+        <a class="retry-button" ng-click='ctrl.newGame()'>Try again</a>
+      </div>
+    </div>
   </div>
 
   <p class="game-explanation">
