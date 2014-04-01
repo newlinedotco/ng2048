@@ -20,7 +20,7 @@ $bright-text-color: #f9f6f2;
 
 // DON'T EDIT BELOW
 $tile-size: ($width - $tile-padding * ($max-tile-count + 1)) / $max-tile-count;
-$transition-time: 500ms;
+$transition-time: 100ms;
 
 .container {
   max-width: 600px;

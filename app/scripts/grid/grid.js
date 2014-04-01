@@ -57,10 +57,15 @@ angular.module('Game', [])
 })
 .provider('GridService', function() {
   this.size = 4; // Default size
+  this.starting_tiles = 2; // default starting tiles
 
   this.setSize = function(sz) {
     this.size = sz ? sz : 0;
   };
+
+  this.setStartingTiles = function(num) {
+    this.starting_tiles = num;
+  }
 
   var service = this;
 
@@ -185,7 +190,7 @@ angular.module('Game', [])
      * with randomly placed tiles
      */
     this.buildStartingPosition = function() {
-      for (var x = 0; x < 1; x++) {
+      for (var x = 0; x < this.starting_tiles; x++) {
         this.randomlyInsertNewTile();
       }
     }
