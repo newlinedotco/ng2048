@@ -142,6 +142,7 @@ angular.module('Game', [])
 
       if (vector.x > 0) positions.x = positions.x.reverse();
       if (vector.y > 0) positions.y = positions.y.reverse();
+
       return positions;
     }
 
@@ -218,9 +219,9 @@ angular.module('Game', [])
     }
 
     this.moveTile = function(tile, newPosition) {
-      if (this.samePositions(tile, newPosition)) {
-        return false;
-      } else {
+      // if (this.samePositions(tile, newPosition)) {
+      //   return false;
+      // } else {
         var oldPos = {
           x: tile.x,
           y: tile.y
@@ -234,8 +235,8 @@ angular.module('Game', [])
         this.tiles[newPosition.x][newPosition.y] = tile;
         tile.updatePosition(newPosition);
 
-        return true;
-      }
+        // return true;
+      // }
     }
 
     /*
@@ -281,7 +282,6 @@ angular.module('Game', [])
      * Remove a tile
      */
     this.removeTile = function(pos) {
-      console.log('removing tile', pos);
       this.tiles[pos.x][pos.y] = null;
     }
 
@@ -298,6 +298,7 @@ angular.module('Game', [])
     this.randomlyInsertNewTile = function() {
       var cell = this.randomAvailableCell(),
           tile = this.newTile(cell, 2);
+      console.log('insertTile', cell, tile);
       this.insertTile(tile);
     }
 

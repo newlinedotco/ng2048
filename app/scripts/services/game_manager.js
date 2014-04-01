@@ -60,11 +60,12 @@ angular.module('twentyfourtyeightApp')
           var tile = GridService.getCellAt({x:x,y:y});
 
           if (tile) {
-            var cell = GridService.calculateNextPosition(tile, v);
+            var cell = GridService.calculateNextPosition(tile, v),
+                next = cell.next;
 
-            if (cell.next && 
-                cell.next.value === tile.value &&
-                !cell.next.merged) {
+            if (next && 
+                next.value === tile.value &&
+                !next.merged) {
 
               // MERGE
               // GridService.removeTile(cell.next);
@@ -75,14 +76,14 @@ angular.module('twentyfourtyeightApp')
                 y: cell.next.y
               }
 
-              var merged = GridService.newTile(cell.next, newValue);
-              merged.mergedFrom = [tile, cell.next];
+              var merged = GridService.newTile(next, newValue);
+              merged.merged = [tile, cell.next];
 
               GridService.insertTile(merged);
               GridService.removeTile(tile);
 
               // Converge the two tiles' positions
-              tile.updatePosition(cell.next);
+              tile.updatePosition(next);
 
               // var newTile = GridService.insertTile(pos, newValue);
               // newTile.setMergedBy([tile, cell.next]);
@@ -100,26 +101,25 @@ angular.module('twentyfourtyeightApp')
               res = GridService.moveTile(tile, cell.newPosition);
               // GridService.insertTile(cell.newPosition, tile.value);
             }
-            if (!hasMoved && res) hasMoved = true;
+
+            if (!GridService.samePositions(cell, tile)) {
+              hasMoved = true;
+            }
           }
         });
       });
 
+      if (hasWon && !self.win) {
+        self.win = true;
+      }
 
-      $timeout(function() {
-        if (hasWon && !self.win) {
-          self.win = true;
+      if (hasMoved) {
+        GridService.randomlyInsertNewTile();
+
+        if (self.win || !self.movesAvailable()) {
+          self.gameOver = true;
         }
-
-        if (hasMoved && !self.win) {
-          GridService.randomlyInsertNewTile();
-          GridService.cleanupCells();
-
-          if (!self.movesAvailable()) {
-            self.gameOver = true;
-          }
-        }
-      }, 100);
+      }
 
     }());
   };
