@@ -63,6 +63,8 @@ angular.module('twentyfourtyeightApp')
             var cell = GridService.calculateNextPosition(tile, v),
                 next = cell.next;
 
+            console.log(x, y, cell, next);
+
             if (next && 
                 next.value === tile.value &&
                 !next.merged) {

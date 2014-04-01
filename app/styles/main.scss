@@ -298,7 +298,7 @@ h1.title {
           $newX: ($tile-size) * ($zeroOffsetX) + ($tile-padding * $zeroOffsetX);
           $newY: ($tile-size) * ($zeroOffsetY) + ($tile-padding * $zeroOffsetY);
 
-          &.position-#{$x}-#{$y} { 
+          &.position-#{$zeroOffsetX}-#{$zeroOffsetY} { 
             @include transform(translate($newX, $newY));
           }
           &.ng-enter {
