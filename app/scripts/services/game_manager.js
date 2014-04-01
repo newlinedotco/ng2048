@@ -75,40 +75,14 @@ angular.module('twentyfourtyeightApp')
                 y: cell.next.y
               }
 
-              // var merged = new Tile(positions.next, tile.value * 2);
-              // merged.mergedFrom = [tile, next];
-
-              // self.grid.insertTile(merged);
-              // self.grid.removeTile(tile);
-
-              // // Converge the two tiles' positions
-              // tile.updatePosition(positions.next);
-
-              // // Update the score
-              // self.score += merged.value;
-
               var newTile = GridService.insertTile(pos, newValue);
-              // cell.original.updateValue(null);
-              // cell.next.updateValue(cell.next.value * 2);
-              // self.updateScore(self.currentScore + cell.next.value);
-              // cell.next.setMerged(cell.original);
-
-              if(cell.next.value >= self.winningValue) {
-                hasWon = true;
-              }
-
-              // console.log('newTile', newTile);
-              // GridService.moveTile(cell.next, cell.next.getPosition());
-
-              newTile.merged = [tile, cell.next];
-              console.log('created new tile', newTile);
-
-              // MOVE THE MERGED TILES
-              GridService.moveTile(cell.original, newTile.getPosition());
-              GridService.moveTile(cell.next, newTile.getPosition());
-              // cell.next.setMerged(tile);
+              newTile.setMergedBy([tile, cell.next]);
 
               self.updateScore(self.currentScore + cell.next.value);
+
+              if(newTile.value >= self.winningValue) {
+                hasWon = true;
+              }
             } else {
               // res = GridService.moveTile(cell.original, cell.newPosition);
               // GridService.removeTile({x:tile.x,y:tile.y});
@@ -128,6 +102,8 @@ angular.module('twentyfourtyeightApp')
 
         if (hasMoved && !self.win) {
           GridService.randomlyInsertNewTile();
+          GridService.cleanupCells();
+          
           if (!self.movesAvailable()) {
             self.gameOver = true;
           }

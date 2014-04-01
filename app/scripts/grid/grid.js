@@ -29,6 +29,14 @@ angular.module('Game', [])
     this.merged = null;
   }
 
+  Tile.prototype.setMergedBy = function(arr) {
+    var self = this;
+    arr.forEach(function(tile) {
+      tile.merged = true;
+      tile.updatePosition(self.getPosition());
+    });
+  }
+
   Tile.prototype.updateValue = function(newVal) {
     this.value = newVal;
   }
@@ -115,9 +123,7 @@ angular.module('Game', [])
       var self = this;
       this.forEach('tiles', function(x, y, tile) {
         if (tile && tile.merged) {
-          tile.merged.forEach(function(t) {
-            self.removeTile(t);
-          });
+          self.removeTile(tile);
         }
       });
     }

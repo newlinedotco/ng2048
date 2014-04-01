@@ -273,6 +273,7 @@ h1.title {
       -webkit-transition-property: -webkit-transform;
       -moz-transition-property: -moz-transform;
       transition-property: transform;
+      z-index: 2;
 
       &.ng-enter {
         border: 10px solid red;
@@ -283,9 +284,8 @@ h1.title {
         // @include animation(appear $transition-time ease-in-out $transition-time);
       }
 
-      &.tile-merged .tile-inner {
-        z-index: 30;
-        border: 10px solid red;
+      &.tile-merged {
+        z-index: 0;
       }
 
       &.ng-remove .tile-inner {
