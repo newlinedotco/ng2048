@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('Keyboard', [])
 .service('KeyboardService', function($q, $document) {
 
@@ -11,7 +13,7 @@ angular.module('Keyboard', [])
     38: UP,
     39: RIGHT,
     40: DOWN
-  }
+  };
 
   this.init = function() {
     var self = this;
@@ -24,16 +26,18 @@ angular.module('Keyboard', [])
         self._handleKeyEvent(key, evt);
       }
     });
-  }
+  };
 
   this.keyEvents = [];
   this.on = function(cb) {
     this.keyEvents.push(cb);
-  }
+  };
 
   this._handleKeyEvent = function(key, evt) {
     var callbacks = this.keyEvents;
-    if (!callbacks) return;
+    if (!callbacks) {
+      return;
+    }
 
     evt.preventDefault();
 
@@ -43,6 +47,6 @@ angular.module('Keyboard', [])
         cb(key, evt);
       }
     }
-  }
+  };
 
 });

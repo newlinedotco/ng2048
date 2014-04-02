@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('Grid')
 .directive('tile', function() {
   return {
@@ -5,8 +7,6 @@ angular.module('Grid')
     scope: {
       ngModel: '='
     },
-    templateUrl: 'scripts/grid/tile.html',
-    link: function(scope, ele, attrs) {
-    }
-  }
-})
+    templateUrl: 'scripts/grid/tile.html'
+  };
+});
