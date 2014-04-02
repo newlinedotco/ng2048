@@ -3,23 +3,29 @@ describe('Game', function() {
 
     beforeEach(module('Game'));
 
-    var gameManager, _cookieStore, _gridService, provide;
+    var gameManager, _cookieStore, _gridService, provide, $rootScope;
 
     beforeEach(module(function($provide) {
       _cookieStore = {
-        get: angular.noop
+        val: {},
+        get: function(key) { return _cookieStore.val; },
+        put: function(key, val) {
+          _cookieStore[key] = val;
+        }
       };
       _gridService = {
         buildEmptyGameBoard: angular.noop,
-        buildStartingPosition: angular.noop
+        buildStartingPosition: angular.noop,
+        anyCellsAvailable: angular.noop
       };
       $provide.value('$cookieStore', _cookieStore);
       $provide.value('GridService', _gridService);
       provide = $provide;
     }));
 
-    beforeEach(inject(function(GameManager) {
+    beforeEach(inject(function(GameManager, _$rootScope_) {
       gameManager = GameManager;
+      $rootScope = _$rootScope_;
     }));
 
     it('should have a GameManager', function() {
@@ -59,6 +65,45 @@ describe('Game', function() {
         gameManager.newGame();
         expect(gameManager.reinit).toHaveBeenCalled();
       });
+    });
+
+    describe('.move', function() {
+      it('should return false if the user has already won the game', function() {
+        gameManager.win = true;
+        spyOn(gameManager, 'move').andCallThrough();
+        gameManager.move().then(function(res) {
+          expect(res).toBeFalsy();
+        });
+        $rootScope.$digest();
+      });
+    });
+
+    describe('.updateScore', function() {
+      it('should update the currentScore', function() {
+        gameManager.updateScore(10);
+        expect(gameManager.currentScore).toEqual(10);
+      });
+      it('should update the highScore when it the newscore is higher than the previous', function() {
+        spyOn(gameManager, 'getHighScore').andReturn(10);
+        spyOn(_cookieStore, 'put').andCallThrough();
+        gameManager.updateScore(1000);
+        expect(_cookieStore.put).toHaveBeenCalledWith('highScore', 1000);
+      });
+    });
+
+    describe('.movesAvailable', function() {
+      it('should look into the GridService to see if any tiles are left open', function() {
+        spyOn(_gridService, 'anyCellsAvailable').andReturn(true);
+        gameManager.movesAvailable();
+        expect(_gridService.anyCellsAvailable).toHaveBeenCalled();
+      });
+      it('should see if any matches are available if there are no moves available', function() {
+        spyOn(_gridService, 'anyCellsAvailable').andReturn(false);
+        spyOn(gameManager, 'tileMatchesAvailable').andReturn(false);
+        gameManager.movesAvailable();
+        expect(gameManager.tileMatchesAvailable).toHaveBeenCalled();
+      });
+
     });
 
   });
