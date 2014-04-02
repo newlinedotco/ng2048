@@ -17,7 +17,8 @@ describe('Game', function() {
         buildEmptyGameBoard: angular.noop,
         buildStartingPosition: angular.noop,
         anyCellsAvailable: angular.noop,
-        tileMatchesAvailable: angular.noop
+        tileMatchesAvailable: angular.noop,
+        getSize: function() { return 4; }
       };
       $provide.value('$cookieStore', _cookieStore);
       $provide.value('GridService', _gridService);
@@ -93,16 +94,19 @@ describe('Game', function() {
     });
 
     describe('.movesAvailable', function() {
-      it('should look into the GridService to see if any tiles are left open', function() {
+      it('should report true if there are cells available', function() {
         spyOn(_gridService, 'anyCellsAvailable').andReturn(true);
-        gameManager.movesAvailable();
-        expect(_gridService.anyCellsAvailable).toHaveBeenCalled();
+        expect(gameManager.movesAvailable()).toBeTruthy();
       });
-      it('should see if any matches are available if there are no moves available', function() {
+      it('should report true if there are matches available', function() {
+        spyOn(_gridService, 'anyCellsAvailable').andReturn(false);
+        spyOn(_gridService, 'tileMatchesAvailable').andReturn(true);
+        expect(gameManager.movesAvailable()).toBeTruthy();
+      });
+      it('should report false if there are no cells nor matches available', function() {
         spyOn(_gridService, 'anyCellsAvailable').andReturn(false);
         spyOn(_gridService, 'tileMatchesAvailable').andReturn(false);
-        gameManager.movesAvailable();
-        expect(_gridService.tileMatchesAvailable).toHaveBeenCalled();
+        expect(gameManager.movesAvailable()).toBeFalsy();
       });
 
     });

@@ -5,7 +5,7 @@
 @import "_functions";
 
 $width: 400px;
-$max-tile-count: 4;
+$max-tile-count: 6;
 $tile-padding: 15px;
 $tile-radius: 3px;
 $tile-font: 'Open Sans', sans-serif;
@@ -208,106 +208,113 @@ h1.title {
    }
 }
 
-#game { 
-  position: relative;
-  padding: $tile-padding;
-  cursor: default;
-  background: #bbaaa0;
-  border-radius: 6px;
-  width: $width;
-  height: $width;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+@mixin game-board($tile-count: 4) {
+  $tile-size: ($width - $tile-padding * ($tile-count + 1)) / $tile-count;
+  #game-#{$tile-count} { 
+    position: relative;
+    padding: $tile-padding;
+    cursor: default;
+    background: #bbaaa0;
+    border-radius: 6px;
+    width: $width;
+    height: $width;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 
-  .grid-container {
-    position: absolute;
-    z-index: 1;
-    margin: 0 auto;
+    .grid-container {
+      position: absolute;
+      z-index: 1;
+      margin: 0 auto;
 
-    .grid-cell {
-      width: $tile-size; //($width / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
-      height: $tile-size; //($width / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
-      margin-bottom: $tile-padding;
-      margin-right: $tile-padding;
-      float: left;
-      @include border-radius($tile-radius);
-      background: rgba(238, 228, 218, 0.35);
-      &:last-child {
-        margin-right: 0
+      .grid-cell {
+        width: $tile-size; //($width / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
+        height: $tile-size; //($width / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
+        margin-bottom: $tile-padding;
+        margin-right: $tile-padding;
+        float: left;
+        @include border-radius($tile-radius);
+        background: rgba(238, 228, 218, 0.35);
+        &:last-child {
+          margin-right: 0
+        }
       }
     }
-  }
 
-  .tile-container {
-    position: absolute;
-    z-index: 2;
-
-    .tile {
-      font-family: $tile-font;
+    .tile-container {
       position: absolute;
-      width: $tile-size;
-      height: $tile-size;
-      @include border-radius($tile-radius);
-      @include transition($transition-time ease-in-out);
-      // @include transition-property(transform);
-      -webkit-transition-property: -webkit-transform;
-      -moz-transition-property: -moz-transform;
-      transition-property: transform;
       z-index: 2;
 
-      &.ng-enter {
-        
-      }
-      &.ng-enter-active .tile-inner {
-      }
+      .tile {
+        font-family: $tile-font;
+        position: absolute;
+        width: $tile-size;
+        height: $tile-size;
+        @include border-radius($tile-radius);
+        @include transition($transition-time ease-in-out);
+        // @include transition-property(transform);
+        -webkit-transition-property: -webkit-transform;
+        -moz-transition-property: -moz-transform;
+        transition-property: transform;
+        z-index: 2;
 
-      &.tile-merged .tile-inner {
-        @include animation(pop 50ms ease-in);
-      }
-      &.tile-merged-add-active .tile-inner {
-      }
+        &.ng-enter {
+          
+        }
+        &.ng-enter-active .tile-inner {
+        }
 
-      &.ng-remove .tile-inner {
-        // @include animation(pop 200ms ease $transition-time);
-      }
+        &.tile-merged .tile-inner {
+          @include animation(pop 50ms ease-in);
+        }
+        &.tile-merged-add-active .tile-inner {
+        }
 
-      @for $x from 1 through $max-tile-count {
-        @for $y from 1 through $max-tile-count {
-          $zeroOffsetX: $x - 1;
-          $zeroOffsetY: $y - 1;
-          $newX: ($tile-size) * ($zeroOffsetX) + ($tile-padding * $zeroOffsetX);
-          $newY: ($tile-size) * ($zeroOffsetY) + ($tile-padding * $zeroOffsetY);
+        &.ng-remove .tile-inner {
+          // @include animation(pop 200ms ease $transition-time);
+        }
 
-          &.position-#{$zeroOffsetX}-#{$zeroOffsetY} { 
-            @include transform(translate($newX, $newY));
-          }
-          &.position-#{$zeroOffsetX}-#{$zeroOffsetY}-add-active .tile-inner {
-            // @include animation(appear 200ms ease);
-            // @include animation-fill-mode(backwards);
+        @for $x from 1 through $tile-count {
+          @for $y from 1 through $tile-count {
+            $zeroOffsetX: $x - 1;
+            $zeroOffsetY: $y - 1;
+            $newX: ($tile-size) * ($zeroOffsetX) + ($tile-padding * $zeroOffsetX);
+            $newY: ($tile-size) * ($zeroOffsetY) + ($tile-padding * $zeroOffsetY);
+
+            &.position-#{$zeroOffsetX}-#{$zeroOffsetY} { 
+              @include transform(translate($newX, $newY));
+            }
+            &.position-#{$zeroOffsetX}-#{$zeroOffsetY}-add-active .tile-inner {
+              // @include animation(appear 200ms ease);
+              // @include animation-fill-mode(backwards);
+            }
           }
         }
-      }
 
-      @for $i from 1 through length($colors) {
-        &.tile-#{power(2, $i)} .tile-inner {
-          background: nth($colors, $i)
+        @for $i from 1 through length($colors) {
+          &.tile-#{power(2, $i)} .tile-inner {
+            background: nth($colors, $i)
+          }
         }
-      }
-      &:last-child {
-        margin-right: 0
-      }
+        &:last-child {
+          margin-right: 0
+        }
 
-      .tile-inner {
-        line-height: ($width/$max-tile-count) - $tile-padding;
+        .tile-inner {
+          line-height: ($width/$tile-count) - $tile-padding;
 
-        text-align: center;
-        font-weight: bold;
-        z-index: 10;
-        font-size: 2.5em;
+          text-align: center;
+          font-weight: bold;
+          z-index: 10;
+          font-size: 2.5em;
+        }
       }
     }
   }
+}
+
+@for $i from 1 through $max-tile-count {
+  @include game-board($i);
 }
 
 @include keyframes(appear) {

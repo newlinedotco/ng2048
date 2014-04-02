@@ -13,6 +13,8 @@ angular.module('Grid')
       // Cell generation
       scope.grid = scope.ngModel.grid;
       scope.tiles = scope.ngModel.tiles;
+      console.log(scope.ngModel);
+      scope.gridSize = scope.ngModel.gameSize;
     }
   };
 });

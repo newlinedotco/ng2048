@@ -84,6 +84,10 @@ angular.module('Grid', [])
       'up': { x: 0, y: -1 },
       'down': { x: 0, y: 1 }
     };
+
+    this.getSize = function() {
+      return service.size;
+    };
     
     // Build game board
     this.buildEmptyGameBoard = function() {

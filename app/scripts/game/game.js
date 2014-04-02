@@ -9,6 +9,8 @@ angular.module('Game', ['Grid', 'Keyboard', 'ngCookies'])
 
   this.grid = GridService.grid;
   this.tiles = GridService.tiles;
+  this.gameSize = GridService.getSize();
+  
   this.winningValue = 2048;
 
   this.reinit = function() {
@@ -123,7 +125,7 @@ angular.module('Game', ['Grid', 'Keyboard', 'ngCookies'])
     return $q.when(f());
   };
 
-  this.movesAvailable = function () {
+  this.movesAvailable = function() {
     return GridService.anyCellsAvailable() || GridService.tileMatchesAvailable();
   };
 

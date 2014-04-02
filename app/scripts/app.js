@@ -1,7 +1,10 @@
 'use strict';
 
 angular
-.module('twentyfourtyeightApp', ['Game', 'ngAnimate', 'ngCookies'])
+.module('twentyfourtyeightApp', ['Game', 'Grid', 'ngAnimate', 'ngCookies'])
+.config(function(GridServiceProvider) {
+  GridServiceProvider.setSize(5);
+})
 .controller('GameController', function(GameManager, KeyboardService) {
 
   this.game = GameManager;

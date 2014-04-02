@@ -1,9 +1,11 @@
-<div class="grid-container">
-  <div class="grid-cell" ng-repeat="cell in grid track by $index"></div>
-</div>
+<div id="game-{{ gridSize }}">
+  <div class="grid-container">
+    <div class="grid-cell" ng-repeat="cell in grid track by $index"></div>
+  </div>
 
-<div class="tile-container">
-  <div tile 
-        ng-model='cell'
-        ng-repeat='cell in tiles track by $id(cell.id || $index)'></div>
+  <div class="tile-container">
+    <div tile 
+          ng-model='cell'
+          ng-repeat='cell in tiles track by $id(cell.id || $index)'></div>
+  </div>
 </div>
