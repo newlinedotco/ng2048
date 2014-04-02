@@ -250,26 +250,26 @@ h1.title {
       height: $tile-size;
       @include border-radius($tile-radius);
       @include transition($transition-time ease-in-out);
-      @include transition-property(transform);
+      // @include transition-property(transform);
       -webkit-transition-property: -webkit-transform;
       -moz-transition-property: -moz-transform;
       transition-property: transform;
       z-index: 2;
 
       &.ng-enter {
-        @include animation(pop 200ms ease $transition-time);
-        @include animation-fill-mode(backwards);
+        
       }
       &.ng-enter-active .tile-inner {
-        @include animation(appear 200ms ease-in-out $transition-time);
       }
 
-      &.tile-merged {
-        z-index: 0;
+      &.tile-merged .tile-inner {
+        @include animation(pop 50ms ease-in);
+      }
+      &.tile-merged-add-active .tile-inner {
       }
 
       &.ng-remove .tile-inner {
-        @include animation(pop 200ms ease $transition-time);
+        // @include animation(pop 200ms ease $transition-time);
       }
 
       @for $x from 1 through $max-tile-count {
@@ -282,8 +282,9 @@ h1.title {
           &.position-#{$zeroOffsetX}-#{$zeroOffsetY} { 
             @include transform(translate($newX, $newY));
           }
-          &.ng-enter {
-            @include transition($transition-time ease-in-out);
+          &.position-#{$zeroOffsetX}-#{$zeroOffsetY}-add-active .tile-inner {
+            // @include animation(appear 200ms ease);
+            // @include animation-fill-mode(backwards);
           }
         }
       }
@@ -314,9 +315,13 @@ h1.title {
     opacity: 0;
     @include transform(scale(0));
   }
+  50% {
+    opacity: 1;
+    @include transform(scale(1.2));
+  }
   100% {
     opacity: 1;
-    @include transform(scale(2));
+    @include transform(scale(1));
   } 
 }
 
@@ -326,7 +331,8 @@ h1.title {
     @include transform(scale(1));
   }
   50% {
-    @include transform(scale(1.5));
+    // opacity: 0;
+    @include transform(scale(1.2));
   }
   100% {
     opacity: 0;

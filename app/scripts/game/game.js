@@ -73,14 +73,15 @@ angular.module('Game', ['Grid', 'Keyboard', 'ngCookies'])
               // GridService.insertTile(cell.newPosition);
               var newValue = tile.value * 2;
 
-              var merged = GridService.newTile(next, newValue);
+              var merged = GridService.newTile(tile, newValue);
               merged.merged = [tile, cell.next];
 
               GridService.insertTile(merged);
               GridService.removeTile(tile);
 
               // Converge the two tiles' positions
-              tile.updatePosition(next);
+              // tile.updatePosition(merged);
+              GridService.moveTile(merged, next);
 
               // var newTile = GridService.insertTile(pos, newValue);
               // newTile.setMergedBy([tile, cell.next]);
