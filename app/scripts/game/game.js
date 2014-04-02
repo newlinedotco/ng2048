@@ -45,8 +45,7 @@ angular.module('Game', ['Grid', 'Keyboard', 'ngCookies'])
     var self = this;
     var f = function() {
       if(self.win) { return false; }
-      var v = vectors[key];
-      var positions = GridService.traversalDirections(v);
+      var positions = GridService.traversalDirections(key);
       var hasMoved = false;
       var hasWon = false;
 
@@ -61,7 +60,7 @@ angular.module('Game', ['Grid', 'Keyboard', 'ngCookies'])
           var tile = GridService.getCellAt(originalPosition);
 
           if (tile) {
-            var cell = GridService.calculateNextPosition(tile, v),
+            var cell = GridService.calculateNextPosition(tile, key),
                 next = cell.next;
 
             if (next &&
@@ -125,49 +124,7 @@ angular.module('Game', ['Grid', 'Keyboard', 'ngCookies'])
   };
 
   this.movesAvailable = function () {
-    return GridService.anyCellsAvailable() || this.tileMatchesAvailable();
-  };
-
-  this.getVector = function (direction) {
-    var map = {
-      0: { x: 0,  y: -1 }, // Up
-      1: { x: 1,  y: 0 },  // Right
-      2: { x: 0,  y: 1 },  // Down
-      3: { x: -1, y: 0 }   // Left
-    };
-    return map[direction];
-  };
-
-  // Private things
-  var vectors = {
-    'left': { x: -1, y: 0 },
-    'right': { x: 1, y: 0 },
-    'up': { x: 0, y: -1 },
-    'down': { x: 0, y: 1 }
-  };
-
-  var directions = ['left', 'right', 'up', 'down'];
-
-  this.tileMatchesAvailable = function () {
-    var self = this;
-    var tile;
-    for (var x = 0; x < self.grid.length; x++) {
-      for (var y = 0; y < self.grid.length; y++) {
-        tile = GridService.getCellAt({ x: x, y: y });
-        if (tile) {
-          for (var direction = 0; direction < directions.length; direction++) {
-            var vector = vectors[directions[direction]];
-            var cell   = { x: x + vector.x, y: y + vector.y };
-            var other  = GridService.getCellAt(cell);
-
-            if (other && other.value === tile.value) {
-              return true; // can be merged
-            }
-          }
-        }
-      }
-    }
-    return false;
+    return GridService.anyCellsAvailable() || GridService.tileMatchesAvailable();
   };
 
   this.updateScore = function(newScore) {

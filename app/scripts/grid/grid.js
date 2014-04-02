@@ -10,7 +10,9 @@ angular.module('Grid', [])
     }
     return (S4() + S4() + delim + S4() + delim + S4() + delim + S4() + delim + S4() + S4() + S4());
   };
-  return generateUid;
+  return {
+    next: function() { return generateUid(); }
+  };
 })
 .factory('TileModel', function(GenerateUniqueId) {
   var Tile = function(pos, val) {
@@ -18,7 +20,7 @@ angular.module('Grid', [])
     this.y      = pos.y;
     this.value  = val || 2;
 
-    this.id = new GenerateUniqueId();
+    this.id = GenerateUniqueId.next();
     this.merged = null;
   };
 
@@ -74,6 +76,14 @@ angular.module('Grid', [])
   this.$get = function(TileModel) {
     this.grid   = [];
     this.tiles  = [];
+
+    // Private things
+    var vectors = {
+      'left': { x: -1, y: 0 },
+      'right': { x: 1, y: 0 },
+      'up': { x: 0, y: -1 },
+      'down': { x: 0, y: 1 }
+    };
     
     // Build game board
     this.buildEmptyGameBoard = function() {
@@ -114,7 +124,8 @@ angular.module('Grid', [])
      * in order, we need to specify the order in which
      * we calculate the next positions
      */
-    this.traversalDirections = function(vector) {
+    this.traversalDirections = function(key) {
+      var vector = vectors[key];
       var positions = {x: [], y: []};
       for (var x = 0; x < this.size; x++) {
         positions.x.push(x);
@@ -135,7 +146,8 @@ angular.module('Grid', [])
     /*
      * Calculate the next position for a tile
      */
-    this.calculateNextPosition = function(cell, vector) {
+    this.calculateNextPosition = function(cell, key) {
+      var vector = vectors[key];
       var previous;
 
       do {
@@ -190,6 +202,30 @@ angular.module('Grid', [])
       });
 
       return cells;
+    };
+
+    /*
+     * Check to see if there are any matches available
+     */
+    this.tileMatchesAvailable = function() {
+      var totalSize = service.size * service.size;
+      for (var i = 0; i < totalSize; i++) {
+        var pos = this._positionToCoordinates(i);
+        var tile = this.tiles[i];
+
+        if (tile) {
+          // Check all vectors
+          for (var vectorName in vectors) {
+            var vector = vectors[vectorName];
+            var cell = { x: pos.x + vector.x, y: pos.y + vector.y };
+            var other = this.getCellAt(cell);
+            if (other && other.value === tile.value) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
     };
 
     /*
@@ -255,7 +291,7 @@ angular.module('Grid', [])
      */
     this._coordinatesToPosition = function(pos) {
       return (pos.y * service.size) + pos.x;
-    }
+    };
 
     /*
      * Insert a new tile
@@ -273,7 +309,7 @@ angular.module('Grid', [])
      * Remove a tile
      */
     this.removeTile = function(pos) {
-      var pos = this._coordinatesToPosition(pos);
+      pos = this._coordinatesToPosition(pos);
       // this.tiles[pos] = null;
       delete this.tiles[pos];
     };
