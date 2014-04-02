@@ -14,7 +14,7 @@ angular
 
   this.startGame = function() {
     var self = this;
-    KeyboardService.on(function(key, evt) {
+    KeyboardService.on(function(key) {
       self.game.move(key).then(function() {
       });
     });

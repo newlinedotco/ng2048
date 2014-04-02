@@ -3,7 +3,7 @@
 angular.module('Game', ['Grid', 'Keyboard', 'ngCookies'])
 .service('GameManager', function($q, $timeout, GridService, KeyboardService, $cookieStore) {
 
-  this.getHighScore = function() { 
+  this.getHighScore = function() {
     return parseInt($cookieStore.get('highScore')) || 0;
   };
 
@@ -43,7 +43,7 @@ angular.module('Game', ['Grid', 'Keyboard', 'ngCookies'])
    */
   this.move = function(key) {
     var self = this;
-    return $q.when(function() {
+    var f = function() {
       if(self.win) { return false; }
       var v = vectors[key];
       var positions = GridService.traversalDirections(v);
@@ -64,7 +64,7 @@ angular.module('Game', ['Grid', 'Keyboard', 'ngCookies'])
             var cell = GridService.calculateNextPosition(tile, v),
                 next = cell.next;
 
-            if (next && 
+            if (next &&
                 next.value === tile.value &&
                 !next.merged) {
 
@@ -72,10 +72,6 @@ angular.module('Game', ['Grid', 'Keyboard', 'ngCookies'])
               // GridService.removeTile(cell.next);
               // GridService.insertTile(cell.newPosition);
               var newValue = tile.value * 2;
-              var pos = {
-                x: cell.next.x,
-                y: cell.next.y
-              }
 
               var merged = GridService.newTile(next, newValue);
               merged.merged = [tile, cell.next];
@@ -123,7 +119,8 @@ angular.module('Game', ['Grid', 'Keyboard', 'ngCookies'])
         }
       }
 
-    }());
+    };
+    return $q.when(f());
   };
 
   this.movesAvailable = function () {
@@ -172,7 +169,7 @@ angular.module('Game', ['Grid', 'Keyboard', 'ngCookies'])
     return false;
   };
 
-  this.updateScore = function(newScore) { 
+  this.updateScore = function(newScore) {
     this.currentScore = newScore;
     if(this.currentScore > this.getHighScore()) {
       this.highScore = newScore;
