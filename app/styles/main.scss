@@ -225,27 +225,16 @@ h1.title {
     z-index: 1;
     margin: 0 auto;
 
-    .grid-row {
+    .grid-cell {
+      width: $tile-size; //($width / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
+      height: $tile-size; //($width / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
       margin-bottom: $tile-padding;
-      &:after {
-        content: "";
-        display: block;
-        clear: both;
-      }
+      margin-right: $tile-padding;
+      float: left;
+      @include border-radius($tile-radius);
+      background: rgba(238, 228, 218, 0.35);
       &:last-child {
-        margin-right: 0;
-      }
-
-      .grid-cell {
-        width: $tile-size; //($width / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
-        height: $tile-size; //($width / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
-        margin-right: $tile-padding;
-        float: left;
-        @include border-radius($tile-radius);
-        background: rgba(238, 228, 218, 0.35);
-        &:last-child {
-          margin-right: 0
-        }
+        margin-right: 0
       }
     }
   }

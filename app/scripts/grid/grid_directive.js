@@ -11,7 +11,7 @@ angular.module('Grid')
     templateUrl: 'scripts/grid/grid.html',
     link: function(scope) {
       // Cell generation
-      scope.rows = scope.ngModel.grid;
+      scope.grid = scope.ngModel.grid;
       scope.tiles = scope.ngModel.tiles;
     }
   };

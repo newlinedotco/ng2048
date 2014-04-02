@@ -78,44 +78,21 @@ angular.module('Grid', [])
     // Build game board
     this.buildEmptyGameBoard = function() {
       var self = this;
-      this.forEach('grid', function(x,y) {
-        self.grid[x][y] = null;
+      // Initialize our grid
+      for (var x = 0; x < service.size * service.size; x++) {
+        this.grid[x] = null;
+      }
+
+      this.forEach(function(x,y) {
+        self.setCellAt({x:x,y:y}, null);
       });
-
-      this.forEach('tiles', function(x,y) {
-        self.tiles[x][y] = null;
-      });
-    };
-
-    /*
-     * Calculate the next positions for
-     * each tile on the board
-     */
-    this.calculateNextPositions = function(vector) {
-      var self = this,
-          cells = [],
-          positions = this.traversalDirections(vector);
-
-      positions.x.forEach(function(x) {
-        positions.y.forEach(function(y) {
-          var cellLoc = { x: x, y: y },
-              cell    = self.getCellAt(cellLoc);
-
-          if (cell) {
-            var next = self.calculateNextPosition(cell, vector);
-            cells.push(next);
-          }
-        });
-      });
-
-      return cells;
     };
 
     /*
      * Prepare for traversal
      */
     this.prepareTiles = function() {
-      this.forEach('tiles', function(x,y,tile) {
+      this.forEach(function(x,y,tile) {
         if (tile) {
           tile.savePosition();
           tile.reset();
@@ -125,7 +102,7 @@ angular.module('Grid', [])
 
     this.cleanupCells = function() {
       var self = this;
-      this.forEach('tiles', function(x, y, tile) {
+      this.forEach(function(x, y, tile) {
         if (tile && tile.merged) {
           self.removeTile(tile);
         }
@@ -182,7 +159,7 @@ angular.module('Grid', [])
 
     this.cellAvailable = function(cell) {
       if (this.withinGrid(cell)) {
-        return !this.tiles[cell.x][cell.y];
+        return !this.getCellAt(cell);
       } else {
         return null;
       }
@@ -205,7 +182,7 @@ angular.module('Grid', [])
       var cells = [],
           self = this;
 
-      this.forEach('grid', function(x,y) {
+      this.forEach(function(x,y) {
         var foundTile = self.getCellAt({x:x, y:y});
         if (!foundTile) {
           cells.push({x:x,y:y});
@@ -220,9 +197,20 @@ angular.module('Grid', [])
      */
     this.getCellAt = function(pos) {
       if (this.withinGrid(pos)) {
-        return this.tiles[pos.x][pos.y];
+        var x = this._coordinatesToPosition(pos);
+        return this.tiles[x];
       } else {
         return null;
+      }
+    };
+
+    /*
+     * Set a cell at position
+     */
+    this.setCellAt = function(pos, tile) {
+      if (this.withinGrid(pos)) {
+        var xPos = this._coordinatesToPosition(pos);
+        this.tiles[xPos] = tile;
       }
     };
 
@@ -232,8 +220,8 @@ angular.module('Grid', [])
         y: tile.y
       };
 
-      this.tiles[oldPos.x][oldPos.y] = null;
-      this.tiles[newPosition.x][newPosition.y] = tile;
+      this.setCellAt(oldPos, null);
+      this.setCellAt(newPosition, tile);
        
       tile.updatePosition(newPosition);
     };
@@ -242,26 +230,39 @@ angular.module('Grid', [])
      * Run a callback for every cell
      * either on the grid or tiles
      */
-    this.forEach = function(type, cb) {
-      if (!type) {
-        type = 'grid';
-      }
-      
-      for (var x = 0; x < service.size; x++) {
-        if (!this[type][x]) {
-          this[type][x] = [];
-        }
-        for (var y = 0; y < service.size; y++) {
-          cb(x, y, this[type][x][y]);
-        }
+    this.forEach = function(cb) {
+      var totalSize = service.size * service.size;
+      for (var i = 0; i < totalSize; i++) {
+        var pos = this._positionToCoordinates(i);
+        cb(pos.x, pos.y, this.tiles[i]);
       }
     };
+
+    /*
+     * Helper to convert x to x,y
+     */
+    this._positionToCoordinates = function(i) {
+      var x = i % service.size,
+          y = (i - x) / service.size;
+      return {
+        x: x,
+        y: y
+      };
+    };
+
+    /*
+     * Helper to convert coordinates to position
+     */
+    this._coordinatesToPosition = function(pos) {
+      return (pos.y * service.size) + pos.x;
+    }
 
     /*
      * Insert a new tile
      */
     this.insertTile = function(tile) {
-      this.tiles[tile.x][tile.y] = tile;
+      var pos = this._coordinatesToPosition(tile);
+      this.tiles[pos] = tile;
     };
 
     this.newTile = function(pos, value) {
@@ -269,24 +270,11 @@ angular.module('Grid', [])
     };
 
     /*
-     * print grid
-     */
-    this.printTiles = function() {
-      for (var x = 0; x < this.size; x++) {
-        var msg = '';
-        for (var y = 0; y < this.size; y++) {
-          var tile = this.getCellAt(x,y);
-          msg += tile ? tile.value : 'x';
-        }
-        console.log(msg);
-      }
-    };
-
-    /*
      * Remove a tile
      */
     this.removeTile = function(pos) {
-      this.tiles[pos.x][pos.y] = null;
+      var pos = this._coordinatesToPosition(pos);
+      this.tiles[pos] = null;
     };
 
     /*
