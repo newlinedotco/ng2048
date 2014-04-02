@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('Game', ['Grid', 'Keyboard'])
+angular.module('Game', ['Grid', 'Keyboard', 'ngCookies'])
 .service('GameManager', function($q, $timeout, GridService, KeyboardService, $cookieStore) {
 
   this.getHighScore = function() { 
