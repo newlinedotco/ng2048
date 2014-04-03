@@ -17,6 +17,7 @@ angular.module('Keyboard', [])
 
   this.init = function() {
     var self = this;
+    this.keyEventHandlers = [];
     $document.bind('keydown', function(evt) {
       var key = keyboardMap[evt.which];
 
@@ -28,13 +29,12 @@ angular.module('Keyboard', [])
     });
   };
 
-  this.keyEvents = [];
   this.on = function(cb) {
-    this.keyEvents.push(cb);
+    this.keyEventHandlers.push(cb);
   };
 
   this._handleKeyEvent = function(key, evt) {
-    var callbacks = this.keyEvents;
+    var callbacks = this.keyEventHandlers;
     if (!callbacks) {
       return;
     }
