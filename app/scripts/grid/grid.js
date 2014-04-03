@@ -61,14 +61,14 @@ angular.module('Grid', [])
 })
 .provider('GridService', function() {
   this.size = 4; // Default size
-  this.startingTiles = 2; // default starting tiles
+  this.startingTileNumber = 2; // default starting tiles
 
   this.setSize = function(sz) {
     this.size = sz ? sz : 0;
   };
 
   this.setStartingTiles = function(num) {
-    this.startingTiles = num;
+    this.startingTileNumber = num;
   };
 
   var service = this;
@@ -159,11 +159,18 @@ angular.module('Grid', [])
       };
     };
 
+
+    /*
+     * Is the position within the grid?
+     */
     this.withinGrid = function(cell) {
       return cell.x >= 0 && cell.x < this.size &&
               cell.y >= 0 && cell.y < this.size;
     };
 
+    /*
+     * Is a cell available at a given position
+     */
     this.cellAvailable = function(cell) {
       if (this.withinGrid(cell)) {
         return !this.getCellAt(cell);
@@ -177,26 +184,9 @@ angular.module('Grid', [])
      * with randomly placed tiles
      */
     this.buildStartingPosition = function() {
-      for (var x = 0; x < this.startingTiles; x++) {
+      for (var x = 0; x < this.startingTileNumber; x++) {
         this.randomlyInsertNewTile();
       }
-    };
-
-    /*
-     * Get all the available tiles
-     */
-    this.availableCells = function() {
-      var cells = [],
-          self = this;
-
-      this.forEach(function(x,y) {
-        var foundTile = self.getCellAt({x:x, y:y});
-        if (!foundTile) {
-          cells.push({x:x,y:y});
-        }
-      });
-
-      return cells;
     };
 
     /*
@@ -314,6 +304,23 @@ angular.module('Grid', [])
      */
     this.samePositions = function(a, b) {
       return a.x === b.x && a.y === b.y;
+    };
+
+    /*
+     * Get all the available tiles
+     */
+    this.availableCells = function() {
+      var cells = [],
+          self = this;
+
+      this.forEach(function(x,y) {
+        var foundTile = self.getCellAt({x:x, y:y});
+        if (!foundTile) {
+          cells.push({x:x,y:y});
+        }
+      });
+
+      return cells;
     };
 
     /*
