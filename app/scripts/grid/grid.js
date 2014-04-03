@@ -114,15 +114,6 @@ angular.module('Grid', [])
       });
     };
 
-    this.cleanupCells = function() {
-      var self = this;
-      this.forEach(function(x, y, tile) {
-        if (tile && tile.merged) {
-          self.removeTile(tile);
-        }
-      });
-    };
-
     /*
      * Due to the fact we calculate the next positions
      * in order, we need to specify the order in which

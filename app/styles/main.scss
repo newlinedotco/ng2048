@@ -19,7 +19,6 @@ $text-color: #776E65;
 $bright-text-color: #f9f6f2;
 
 // DON'T EDIT BELOW
-$tile-size: ($width - $tile-padding * ($max-tile-count + 1)) / $max-tile-count;
 $transition-time: 100ms;
 
 .container {
@@ -228,8 +227,8 @@ h1.title {
       margin: 0 auto;
 
       .grid-cell {
-        width: $tile-size; //($width / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
-        height: $tile-size; //($width / $max-tile-count) - ($tile-padding + ($tile-radius * 2));
+        width: $tile-size;
+        height: $tile-size;
         margin-bottom: $tile-padding;
         margin-right: $tile-padding;
         float: left;
