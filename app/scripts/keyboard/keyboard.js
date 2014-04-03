@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('Keyboard', [])
-.service('KeyboardService', function($q, $document) {
+.service('KeyboardService', function($document) {
 
   var UP    = 'up',
       RIGHT = 'right',

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('Game', ['Grid', 'Keyboard', 'ngCookies'])
-.service('GameManager', function($q, $timeout, GridService, KeyboardService, $cookieStore) {
+angular.module('Game', ['Grid', 'ngCookies'])
+.service('GameManager', function($q, $timeout, GridService, $cookieStore) {
 
   this.getHighScore = function() {
     return parseInt($cookieStore.get('highScore')) || 0;
@@ -10,7 +10,7 @@ angular.module('Game', ['Grid', 'Keyboard', 'ngCookies'])
   this.grid = GridService.grid;
   this.tiles = GridService.tiles;
   this.gameSize = GridService.getSize();
-  
+
   this.winningValue = 2048;
 
   this.reinit = function() {
