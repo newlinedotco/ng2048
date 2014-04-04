@@ -295,7 +295,6 @@ angular.module('Grid', [])
      */
     this.removeTile = function(pos) {
       pos = this._coordinatesToPosition(pos);
-      // this.tiles[pos] = null;
       delete this.tiles[pos];
     };
 
