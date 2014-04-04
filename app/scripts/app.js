@@ -11,7 +11,6 @@ angular
 
   this.newGame = function() {
     KeyboardService.init();
-
     this.game.newGame();
     this.startGame();
   };
@@ -19,8 +18,7 @@ angular
   this.startGame = function() {
     var self = this;
     KeyboardService.on(function(key) {
-      self.game.move(key).then(function() {
-      });
+      self.game.move(key);
     });
   };
 

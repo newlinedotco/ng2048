@@ -54,8 +54,6 @@ angular.module('Game', ['Grid', 'ngCookies'])
       // Update Grid
       GridService.prepareTiles();
 
-      var res;
-
       positions.x.forEach(function(x) {
         positions.y.forEach(function(y) {
           var originalPosition = {x:x,y:y};
@@ -70,8 +68,6 @@ angular.module('Game', ['Grid', 'ngCookies'])
                 !next.merged) {
 
               // MERGE
-              // GridService.removeTile(cell.next);
-              // GridService.insertTile(cell.newPosition);
               var newValue = tile.value * 2;
 
               var merged = GridService.newTile(tile, newValue);
@@ -80,14 +76,7 @@ angular.module('Game', ['Grid', 'ngCookies'])
               GridService.insertTile(merged);
               GridService.removeTile(tile);
 
-              // Converge the two tiles' positions
-              // tile.updatePosition(merged);
               GridService.moveTile(merged, next);
-
-              // var newTile = GridService.insertTile(pos, newValue);
-              // newTile.setMergedBy([tile, cell.next]);
-              // GridService.removeTile(tile);
-              // GridService.removeTile(cell.next);
 
               self.updateScore(self.currentScore + cell.next.value);
 
@@ -95,11 +84,7 @@ angular.module('Game', ['Grid', 'ngCookies'])
                 hasWon = true;
               }
             } else {
-              // res = GridService.moveTile(cell.original, cell.newPosition);
-              // GridService.removeTile({x:tile.x,y:tile.y});
-              res = GridService.moveTile(tile, cell.newPosition);
-              // GridService.insertTile(cell.newPosition, tile.value);
-
+              GridService.moveTile(tile, cell.newPosition);
             }
 
             if (!GridService.samePositions(originalPosition,cell.newPosition)) {
