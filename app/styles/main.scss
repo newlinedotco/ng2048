@@ -9,7 +9,17 @@ $max-tile-count: 6;
 $tile-padding: 15px;
 $tile-radius: 3px;
 $tile-font: 'Open Sans', sans-serif;
-$colors: #EEE4DA, #EAE0C8, #F59563, #3399ff, #ffa333, #cef030, #2b81d6;
+$colors:  #EEE4DA, // 2
+          #EAE0C8, // 4
+          #F59563, // 8
+          #3399ff, // 16
+          #ffa333, // 32
+          #cef030, // 64
+          #E8D8CE, // 128
+          #990303, // 256
+          #6BA5DE, // 512
+          #DCAD60, // 1024
+          #B60022; // 2048
 
 $game-container-background: #bbada0;
 $tile-color: #eee4da;
@@ -175,36 +185,49 @@ h1.title {
 }
 
 .game-overlay {
-   width: $width;
-   height: $width;
-   background-color: rgba(255, 255, 255, 0.47);
-   position: absolute;
-   top: 0;
-   left: 0;
-   z-index: 10;
-   text-align: center;
-   padding-top: 35%;
-   font-size: 3em;
-   font-weight: bold;
+  width: $width;
+  height: $width;
+  background-color: rgba(255, 255, 255, 0.47);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  text-align: center;
+  padding-top: 35%;
+  font-size: 3em;
+  font-weight: bold;
+  overflow: hidden;
+  box-sizing: border-box;
+  
+  &.ng-enter {
+    @include transition(all 1000ms ease-in);
+    @include transform(translate(0, 100%));
+    opacity: 0;
+  }
 
-   .lower {
-      display: block;
-      margin-top: 29px;
-      font-size: 16px;
+  &.ng-enter-active {
+    @include transform(translate(0, 0));
+    opacity: 1;
+  }
 
-      a {
-         display: inline-block;
-         background: #8f7a66;
-         border-radius: 3px;
-         padding: 0 20px;
-         text-decoration: none;
-         color: #f9f6f2;
-         height: 40px;
-         line-height: 42px;
-         cursor: pointer;
-         margin-left: 9px;
-      }
-   }
+  .lower {
+    display: block;
+    margin-top: 29px;
+    font-size: 16px;
+
+    a {
+       display: inline-block;
+       background: #8f7a66;
+       border-radius: 3px;
+       padding: 0 20px;
+       text-decoration: none;
+       color: #f9f6f2;
+       height: 40px;
+       line-height: 42px;
+       cursor: pointer;
+       margin-left: 9px;
+    }
+  }
 }
 
 @mixin game-board($tile-count: 4) {
@@ -257,20 +280,8 @@ h1.title {
         transition-property: transform;
         z-index: 2;
 
-        &.ng-enter {
-          
-        }
-        &.ng-enter-active .tile-inner {
-        }
-
         &.tile-merged .tile-inner {
           @include animation(pop 50ms ease-in);
-        }
-        &.tile-merged-add-active .tile-inner {
-        }
-
-        &.ng-remove .tile-inner {
-          // @include animation(pop 200ms ease $transition-time);
         }
 
         @for $x from 1 through $tile-count {
@@ -282,10 +293,6 @@ h1.title {
 
             &.position-#{$zeroOffsetX}-#{$zeroOffsetY} { 
               @include transform(translate($newX, $newY));
-            }
-            &.position-#{$zeroOffsetX}-#{$zeroOffsetY}-add-active .tile-inner {
-              // @include animation(appear 200ms ease);
-              // @include animation-fill-mode(backwards);
             }
           }
         }

@@ -83,6 +83,7 @@ angular.module('Game', ['Grid', 'ngCookies'])
               if(merged.value >= self.winningValue) {
                 hasWon = true;
               }
+              hasMoved = true; // we moved with a merge
             } else {
               GridService.moveTile(tile, cell.newPosition);
             }
