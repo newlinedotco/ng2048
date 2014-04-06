@@ -113,6 +113,21 @@ module.exports = function (grunt) {
       }
     },
 
+    ngtemplates: {
+      twentyfourtyeightApp: {
+        src: '<%= yeoman.app %>/scripts/**/*.html',
+        dest: '<%= yeoman.dist %>/scripts/templates.js',
+        options: {
+          cwd: '<%= yeoman.app %>',
+          url:    function(url) { 
+            return url.replace('app/', ''); 
+          },
+          usemin: 'scripts/templates.js',
+          htmlmin:  '<%= htmlmin.app %>'
+        }
+      }
+    },
+
     // Empties folders to start fresh
     clean: {
       dist: {
@@ -400,6 +415,7 @@ module.exports = function (grunt) {
     'cdnify',
     'cssmin',
     'uglify',
+    'ngtemplates',
     'rev',
     'usemin',
     'htmlmin'
