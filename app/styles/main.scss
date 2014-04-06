@@ -29,7 +29,7 @@ $text-color: #776E65;
 $bright-text-color: #f9f6f2;
 
 // DON'T EDIT BELOW
-$transition-time: 100ms;
+$transition-time: 170ms;
 
 .container {
   max-width: 600px;
@@ -281,7 +281,7 @@ h1.title {
         z-index: 2;
 
         &.tile-merged .tile-inner {
-          @include animation(pop 50ms ease-in);
+          @include animation(pop 120ms ease-in);
         }
 
         @for $x from 1 through $tile-count {
