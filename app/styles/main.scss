@@ -5,6 +5,7 @@
 @import "_functions";
 
 $width: 400px;
+$min-tile-count: 3;
 $max-tile-count: 6;
 $tile-padding: 15px;
 $tile-radius: 3px;
@@ -267,6 +268,20 @@ h1.title {
       position: absolute;
       z-index: 2;
 
+      .unstyled-tile {
+        font-family: $tile-font;
+        position: absolute;
+        width: $tile-size;
+        height: $tile-size;
+        background: white;
+        margin: 0 auto;
+        font-size: 2em;
+        text-align: center;
+        font-weight: bold;
+        z-index: 10;
+        font-size: 2.5em;
+        line-height: ($width/$tile-count) - $tile-padding;
+      }
       .tile {
         font-family: $tile-font;
         position: absolute;
@@ -281,7 +296,7 @@ h1.title {
         z-index: 2;
 
         &.tile-merged .tile-inner {
-          @include animation(pop 120ms ease-in);
+          @include animation(pop 200ms ease-in);
         }
 
         @for $x from 1 through $tile-count {
@@ -319,7 +334,7 @@ h1.title {
   }
 }
 
-@for $i from 1 through $max-tile-count {
+@for $i from $min-tile-count through $max-tile-count {
   @include game-board($i);
 }
 
