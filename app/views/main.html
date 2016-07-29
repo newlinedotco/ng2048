@@ -23,6 +23,16 @@
       <div class="lower">
         <a class="retry-button" ng-click='ctrl.newGame()'>Try again</a>
       </div>
+
+      <div class="social">
+        <a twitter-share twitter-text="ctrl.getShareableText()" twitter-url="ctrl.generateShareableLink()"
+          ng-if="ctrl.game.gameOver">
+        </a>
+
+        <a facebook-share facebook-url="ctrl.generateShareableLink()"
+          ng-if="ctrl.game.gameOver">
+        </a>
+      </div>
     </div>
 
     <div id="win" ng-if="ctrl.game.win" class="row game-overlay">
@@ -30,6 +40,16 @@
 
       <div class="lower">
         <a class="retry-button" ng-click='ctrl.newGame()'>Try again</a>
+      </div>
+
+      <div class="social">
+        <a twitter-share twitter-text="ctrl.getShareableText()" twitter-url="ctrl.generateShareableLink()"
+          ng-if="ctrl.game.win">
+        </a>
+
+        <a facebook-share facebook-url="ctrl.generateShareableLink()"
+          ng-if="ctrl.game.win">
+        </a>
       </div>
     </div>
   </div>

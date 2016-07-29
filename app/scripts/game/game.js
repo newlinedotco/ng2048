@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('Game', ['Grid', 'ngCookies'])
-.service('GameManager', function($q, $timeout, GridService, $cookieStore) {
+angular.module('Game', ['Grid', 'ngCookies', 'LZString'])
+.service('GameManager', function($q, $timeout, GridService, $cookieStore, LZString) {
 
   this.getHighScore = function() {
     return parseInt($cookieStore.get('highScore')) || 0;
@@ -18,6 +18,8 @@ angular.module('Game', ['Grid', 'ngCookies'])
     this.win = false;
     this.currentScore = 0;
     this.highScore = this.getHighScore();
+    //
+    this.encrypted = null;
   };
   this.reinit();
 
@@ -25,6 +27,64 @@ angular.module('Game', ['Grid', 'ngCookies'])
     GridService.buildEmptyGameBoard();
     GridService.buildStartingPosition();
     this.reinit();
+  };
+
+  // Restore the game board with the data sent by the user via URL
+  this.restoreGame = function(gameEncrypted) {
+    GridService.buildEmptyGameBoard();
+    if (gameEncrypted) {
+      // decode the data
+      var game = this.decodeGame(gameEncrypted);
+
+      if (game) {
+        GridService.restoreGameBoard(game.tiles);
+        this.updateScore(game.currentScore);
+        return true;
+      }
+    }
+    // Couldn't restore, start in initial state
+    GridService.buildStartingPosition();
+    return false;
+  };
+
+  this.encodeGame = function() {
+    // minify tiles object
+    var tiles = this.tiles.map(function(tile) {
+      return tile ? tile.value : null;
+    });
+    var game = [this.currentScore, tiles];
+    // encode game data
+    var encryptedGame = LZString.compressToEncodedURIComponent(JSON.stringify(game));
+    return encryptedGame;
+  };
+
+  this.decodeGame = function(encryptedGame) {
+    var decompressed = LZString.decompressFromEncodedURIComponent(encryptedGame);
+    if (decompressed) {
+      var temp = JSON.parse(decompressed);
+      if (this.validateDecodedGame(temp)) {
+        var game = {
+          currentScore: temp[0],
+          tiles: temp[1]
+        };
+        return game;
+      }
+    }
+    return null;
+  };
+
+  this.validateDecodedGame = function(game) {
+    if (game.length === 2 && game[1].length === 16) {
+      // Check if its in the right structure
+      for (var i = 0, l = game[1].length; i < l; i++) {
+        var item = game[1][i];
+        if (Array.isArray(item)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
   };
 
   /*
@@ -117,6 +177,7 @@ angular.module('Game', ['Grid', 'ngCookies'])
 
   this.updateScore = function(newScore) {
     this.currentScore = newScore;
+
     if(this.currentScore > this.getHighScore()) {
       this.highScore = newScore;
       $cookieStore.put('highScore', newScore);
