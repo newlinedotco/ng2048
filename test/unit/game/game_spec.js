@@ -1,9 +1,14 @@
 describe('Game', function() {
   describe('GameManager', function() {
 
+    
+    beforeEach(function () {
+      //mock the LZString lib:
+      angular.module("LZString", []);
+    });
     beforeEach(module('Game'));
-
-    var gameManager, _cookieStore, _gridService, provide, $rootScope;
+    
+    var gameManager, _cookieStore, _gridService, provide, $rootScope, _lzString;
 
     beforeEach(module(function($provide) {
       _cookieStore = {
@@ -20,8 +25,13 @@ describe('Game', function() {
         tileMatchesAvailable: angular.noop,
         getSize: function() { return 4; }
       };
+      _lzString = {
+        compressToEncodedURIComponent: function() { return 'NoFgbATANMB2CuAbRUHNUlaXGgBigEYBdG'; },
+        decompressFromEncodedURIComponent: function(param) {}
+      };
       $provide.value('$cookieStore', _cookieStore);
       $provide.value('GridService', _gridService);
+      $provide.value('LZString', _lzString);
       provide = $provide;
     }));
 
@@ -66,6 +76,54 @@ describe('Game', function() {
         spyOn(gameManager, 'reinit').andCallThrough();
         gameManager.newGame();
         expect(gameManager.reinit).toHaveBeenCalled();
+      });
+    });
+
+    describe('.encodeGame', function() {
+      it('should call LZString to compress and encode tiles and currentScore data and return encoded result', function() {
+        var game = {
+          tiles: [
+            {id:1,value:4,x:0,y:3},
+            {id:2,value:8,x:2,y:2}
+          ],
+          currentScore: 12
+        };
+        gameManager.tiles = game.tiles;
+        gameManager.currentScore = game.currentScore;
+        spyOn(_lzString, 'compressToEncodedURIComponent').andCallThrough();
+        var result = gameManager.encodeGame();
+        expect(_lzString.compressToEncodedURIComponent).toHaveBeenCalled();
+        expect(result).toBeTruthy();
+      });
+    });
+
+    describe('.decodeGame', function() {
+      it('should call LZString to decompress and decode argument received', function() {
+        var param = 'NoFgbATANMB2CuAbRUHNUlaXGgBigEYBdG';
+        spyOn(_lzString, 'decompressFromEncodedURIComponent').andCallThrough();
+        gameManager.decodeGame(param);
+        expect(_lzString.decompressFromEncodedURIComponent).toHaveBeenCalledWith(param);
+      });
+    });
+
+    describe('.restoreGame', function() {
+      it('should call GridService and decodeGame with argument received', function() {
+        var param = 'NoFgbATANMB2CuAbRUHNUlaXGgBigEYBdG';
+        spyOn(_gridService, 'buildEmptyGameBoard').andCallThrough();
+        spyOn(gameManager, 'decodeGame').andCallThrough();
+        gameManager.restoreGame(param);
+        expect(_gridService.buildEmptyGameBoard).toHaveBeenCalled();
+        expect(gameManager.decodeGame).toHaveBeenCalledWith(param);
+      });
+    });
+
+    describe('.restoreGame', function() {
+      it('should call GridService buildStartingPosition and return false if argument is null', function() {
+        var param = null;
+        spyOn(_gridService, 'buildStartingPosition').andCallThrough();
+        var result = gameManager.restoreGame(param);
+        expect(_gridService.buildStartingPosition).toHaveBeenCalled();
+        expect(result).toBeFalsy();
       });
     });
 

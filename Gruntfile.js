@@ -29,7 +29,7 @@ module.exports = function (grunt) {
     watch: {
       bower: {
         files: ['bower.json'],
-        tasks: ['bowerInstall']
+        tasks: ['wiredep']
       },
       js: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
@@ -119,8 +119,8 @@ module.exports = function (grunt) {
         dest: '<%= yeoman.dist %>/scripts/templates.js',
         options: {
           cwd: '<%= yeoman.app %>',
-          url:    function(url) { 
-            return url.replace('app/', ''); 
+          url: function(url) {
+            return url.replace('app/', '');
           },
           usemin: 'scripts/templates.js',
           htmlmin:  '<%= htmlmin.app %>'
@@ -174,14 +174,31 @@ module.exports = function (grunt) {
     },
 
     // Automatically inject Bower components into the app
-    bowerInstall: {
-      app: {
-        src: ['<%= yeoman.app %>/index.html'],
-        ignorePath: '<%= yeoman.app %>/'
-      },
-      sass: {
-        src: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-        ignorePath: '<%= yeoman.app %>/bower_components/'
+    // bowerInstall: {
+    //   app: {
+    //     src: ['<%= yeoman.app %>/index.html'],
+    //     ignorePath: '<%= yeoman.app %>/'
+    //   },
+    //   sass: {
+    //     src: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
+    //     ignorePath: '<%= yeoman.app %>/bower_components/'
+    //   }
+    // },
+    wiredep: {
+      task: {
+        // Point to the files that should be updated when
+        // you run `grunt wiredep`
+        src: [
+          '<%= yeoman.app %>/index.html',   // .html support...
+          '<%= yeoman.app %>/styles/main.scss'  // .scss & .sass support...
+        ],
+
+        options: {
+          // See wiredep's configuration documentation for the options
+          // you may pass:
+
+          // https://github.com/taptapship/wiredep#configuration
+        }
       }
     },
     // Renames files for browser caching purposes
@@ -285,7 +302,7 @@ module.exports = function (grunt) {
         }]
       }
     },
-
+    
     // Replace Google CDN references
     cdnify: {
       dist: {
@@ -366,6 +383,9 @@ module.exports = function (grunt) {
     // },
 
     // Test settings
+    /**
+     * The Karma configurations.
+     */
     karma: {
       unit: {
         configFile: 'karma.conf.js',
@@ -382,7 +402,8 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
-      'bowerInstall',
+      // 'bowerInstall',
+      'wiredep',
       'concurrent:server',
       'autoprefixer',
       'connect:livereload',
@@ -405,7 +426,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
-    'bowerInstall',
+    'wiredep',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
@@ -427,3 +448,7 @@ module.exports = function (grunt) {
     'build'
   ]);
 };
+
+
+
+

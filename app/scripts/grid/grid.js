@@ -7,7 +7,7 @@ angular.module('Grid', [])
     // http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
     var d = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = (d + Math.random()*16)%16 | 0;
+      var r = (d + Math.random()*16) %16 | 0;
       d = Math.floor(d/16);
       return (c === 'x' ? r : (r&0x7|0x8)).toString(16);
     });
@@ -91,10 +91,11 @@ angular.module('Grid', [])
     this.getSize = function() {
       return service.size;
     };
-    
-    // Build game board
+
+    // Build empty game board
     this.buildEmptyGameBoard = function() {
       var self = this;
+
       // Initialize our grid
       for (var x = 0; x < service.size * service.size; x++) {
         this.grid[x] = null;
@@ -102,6 +103,20 @@ angular.module('Grid', [])
 
       this.forEach(function(x,y) {
         self.setCellAt({x:x,y:y}, null);
+      });
+    };
+
+    // Restore game board from array of values
+    this.restoreGameBoard = function(tilesValues) {
+      var self = this,
+        i = 0;
+      this.forEach(function(x,y) {
+        var value = tilesValues[i];
+        if (value) {
+          var tile = self.newTile({x:x,y:y}, value);
+          self.insertTile(tile);
+        }
+        i++;
       });
     };
 
